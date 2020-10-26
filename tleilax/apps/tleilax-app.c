@@ -22,9 +22,6 @@ void PrepareStarDescription(float xOffset, float yOffset, float zOffset, uint32_
 
 Camera OnStarClicked(Camera *camera, Vector3 *starPositionInWorldCoords);
 
-void InitCamera(Vector3 *cameraInitialPosition, Camera *camera, float *distance, float *verticalAngle,
-                float *horizontalAngle, float *horizontalDistance);
-
 int main(int argc, char *argv[]) {
     print_version();
 
@@ -33,15 +30,32 @@ int main(int argc, char *argv[]) {
     const int screenWidth = 1800;
     const int screenHeight = 1450;
 
-    InitWindow(screenWidth, screenHeight,"TleilaxRL");
+    InitWindow(screenWidth, screenHeight,
+               "raylib [core] example - 3d camera free");
 
-    Camera camera;
-    Vector3 cameraInitialPosition;
-    float distance;
-    float verticalAngle;
-    float horizontalAngle;
-    float horizontalDistance;
-    InitCamera(&cameraInitialPosition, &camera, &distance, &verticalAngle, &horizontalAngle, &horizontalDistance);
+    // Define the camera to look into our 3d world
+    Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
+    Camera camera = {0};
+    camera.position = (Vector3) {50.0f, 50.0f, 50.0f};
+    camera.target = cameraInitialPosition;
+    camera.up = (Vector3) {0.0f, 1.0f, 0.0f};
+    camera.fovy = 45.0f;
+    camera.type = CAMERA_PERSPECTIVE;
+
+    float distance =
+            100.0f; // Set the distance from camera.target to camera.position
+    float verticalAngle = 45.0f;   // The Y/XZ angle
+    float horizontalAngle = 90.0f; // The X/Z angle, y is considered as 0
+    float horizontalDistance =
+            distance *
+            cosf(verticalAngle * PI / 180.0f); // Horizontal distance, the magnitude
+
+    camera.position.x = horizontalDistance *
+                        cosf(horizontalAngle * PI /
+                             180.0f); // Calculate the position of camera.position
+    // x based on distance etc..
+    camera.position.z = horizontalDistance * sinf(horizontalAngle * PI / 180.0f);
+    camera.position.y = distance * sinf(verticalAngle * PI / 180.0f);
 
     Ray ray = {0};
     bool mouseHoverOnStar = false;
@@ -129,32 +143,6 @@ int main(int argc, char *argv[]) {
     CloseWindow(); // Close window and OpenGL context
     Tleilax.Destroy();
     return 0;
-}
-
-void InitCamera(Vector3 *cameraInitialPosition, Camera *camera, float *distance, float *verticalAngle,
-                float *horizontalAngle, float *horizontalDistance) {
-    (*cameraInitialPosition) = {0.0f, 0.0f, 0.0f};
-    (*camera) = {0};
-    (*distance) = 100.0f;
-    (*verticalAngle) = 45.0f;
-    (*horizontalAngle) = 90.0f;
-    (*horizontalDistance) = distance *
-                            cosf(verticalAngle * PI / 180.0f);// Define the camera to look into our 3d world
-    (*camera).position = (Vector3) {50.0f, 50.0f, 50.0f};
-    (*camera).target = (*cameraInitialPosition);
-    (*camera).up = (Vector3) {0.0f, 1.0f, 0.0f};
-    (*camera).fovy = 45.0f;
-    (*camera).type = CAMERA_PERSPECTIVE;// Set the distance from camera.target to camera.position
-// The Y/XZ angle
-// The X/Z angle, y is considered as 0
-// Horizontal distance, the magnitude
-
-    (*camera).position.x = (*horizontalDistance) *
-                           cosf((*horizontalAngle) * PI /
-                                180.0f); // Calculate the position of camera.position
-// x based on distance etc..
-    (*camera).position.z = (*horizontalDistance) * sinf((*horizontalAngle) * PI / 180.0f);
-    (*camera).position.y = (*distance) * sinf((*verticalAngle) * PI / 180.0f);
 }
 
 Camera OnStarClicked(Camera *camera, Vector3 *starPositionInWorldCoords) {
