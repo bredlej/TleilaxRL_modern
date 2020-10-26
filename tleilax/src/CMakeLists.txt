@@ -1,10 +1,20 @@
 set(HEADER_LIST "${Tleilax_SOURCE_DIR}/include/tleilax/tleilax.h")
+set(GALAXY_HEADER "${Tleilax_SOURCE_DIR}/include/galaxy/galaxy.h")
+set(RANDOM_HEADER "${Tleilax_SOURCE_DIR}/include/random/random.h")
 set(LUA_HEADERS "${Tleilax_SOURCE_DIR}/include/lua_utils/lua_utils.h")
+
+add_library (random random.c ${RANDOM_HEADER})
+target_link_libraries(random PCG-random)
+target_include_directories(random PUBLIC ../include)
 
 add_library(lua_utils lua_utils.c ${LUA_HEADERS})
 target_link_libraries(lua_utils Lua)
 target_include_directories(lua_utils PUBLIC ../include)
 
+add_library(galaxy galaxy.c ${GALAXY_HEADER})
+target_include_directories(galaxy PUBLIC ../include)
+
 add_library(tleilax_library tleilax.c ${HEADER_LIST})
-target_link_libraries(tleilax_library PCG-random)
+target_link_libraries(tleilax_library random galaxy)
 target_include_directories(tleilax_library PUBLIC ../include)
+

@@ -1,5 +1,4 @@
-#include "random.h"
-
+#include <random/random.h>
 #include "pcg_basic.h"
 
 pcg32_random_t rng;
@@ -19,8 +18,16 @@ uint32_t randomize_seed_xy(const uint32_t x, const uint32_t y) {
     return rnd();
 }
 
-struct random Random = {.rnd = rnd,
-			.rnd_double_range = rndDouble,
-			.rnd_int_range = rndInt,
-			.randomize_seed_xy = randomize_seed_xy};
+uint32_t randomize_seed_xyz(const uint32_t x, const uint32_t y, const uint32_t z) {
+    pcg32_srandom_r(&rng, ((x + y) >> 1) * (x + y + 1) + y, ((x + z) >> 1) * (x + z + 1) + z);
+    return rnd();
+}
+
+struct random Random = {
+    .Rnd = rnd,
+    .RndDoubleRange = rndDouble,
+    .RndIntRange = rndInt,
+    .RandomizeSeedXY = randomize_seed_xy,
+    .RandomizeSeedXYZ = randomize_seed_xyz
+};
 
