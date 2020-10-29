@@ -31,4 +31,5 @@ struct Galaxy
 };
 
 extern struct Galaxy Galaxy;
+extern struct Star;
 #endif // !_GALAXY_H_

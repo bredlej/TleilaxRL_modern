@@ -41,6 +41,24 @@ SET (   LUA_SRC_LIB
 add_library(Lua STATIC ${LUA_SRC_LIB})
 target_include_directories(Lua PUBLIC lua-5.4.1/src)
 
+add_library(FaultAllocator STATIC C_StateMachine/Fault.c)
+target_include_directories(FaultAllocator PUBLIC C_StateMachine)
+
+add_library(FBAllocator STATIC C_StateMachine/fb_allocator.c)
+target_include_directories(FBAllocator PUBLIC C_StateMachine)
+target_link_libraries(FBAllocator)
+
+SET (   C_STATEMACHINE_SRC_LIB
+		C_StateMachine/StateMachine.c
+		#C_StateMachine/Fault.cpp
+		#C_StateMachine/fb_allocator.c
+		#C_StateMachine/LockGuard.c
+		C_StateMachine/sm_allocator.c
+		C_StateMachine/x_allocator.c
+		)
+add_library(C_StateMachine STATIC ${C_STATEMACHINE_SRC_LIB})
+target_include_directories(C_StateMachine PUBLIC C_StateMachine)
+target_link_libraries(C_StateMachine FaultAllocator FBAllocator)
 # Set this to the minimal version you want to support
 find_package(raylib 3.0 QUIET) # Let CMake search for a raylib-config.cmake
 

@@ -14,7 +14,11 @@ target_include_directories(lua_utils PUBLIC ../include)
 add_library(galaxy galaxy.c ${GALAXY_HEADER})
 target_include_directories(galaxy PUBLIC ../include)
 
+add_library(graphics graphics.c "${Tleilax_SOURCE_DIR}/include/tleilax/graphics.h")
+target_link_libraries(graphics raylib)
+target_include_directories(graphics PUBLIC ../include)
+
 add_library(tleilax_library tleilax.c ${HEADER_LIST})
-target_link_libraries(tleilax_library random galaxy)
+target_link_libraries(tleilax_library random galaxy graphics)
 target_include_directories(tleilax_library PUBLIC ../include)
 

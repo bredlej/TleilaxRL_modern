@@ -2,7 +2,7 @@
 
 void print_version(void)
 {
-	printf("Myproject (version %0.2f)\n", VERSION);
+	printf("Tleilax (version %0.2f)\n", VERSION);
 }
 
 /*
