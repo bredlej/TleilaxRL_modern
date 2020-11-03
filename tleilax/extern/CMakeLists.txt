@@ -56,9 +56,11 @@ SET (   C_STATEMACHINE_SRC_LIB
 		C_StateMachine/sm_allocator.c
 		C_StateMachine/x_allocator.c
 		)
+
 add_library(C_StateMachine STATIC ${C_STATEMACHINE_SRC_LIB})
 target_include_directories(C_StateMachine PUBLIC C_StateMachine)
 target_link_libraries(C_StateMachine FaultAllocator FBAllocator)
+
 # Set this to the minimal version you want to support
 find_package(raylib 3.0 QUIET) # Let CMake search for a raylib-config.cmake
 

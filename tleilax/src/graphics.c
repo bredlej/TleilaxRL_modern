@@ -3,6 +3,39 @@
 //
 #include <tleilax/graphics.h>
 
+
+void DescribeStar(Camera *camera, Vector3 *starPositionInWorldCoords,
+                  const char *starDescription);
+
+void RenderStar(const struct Star *star, Vector3 *starPositionInWorldCoords);
+
+void AdjustCameraView(float *distance, float *horizontalDistance,
+                      const float *verticalAngle, const float *horizontalAngle,
+                      Camera3D *camera, float amount);
+
+Camera AdjustCameraOnUserInput(Camera *camera, float *distance, float *verticalAngle, float *horizontalAngle,
+                               float *horizontalDistance);
+
+void PrepareStarDescription(float xOffset, float yOffset, float zOffset, uint32_t sectorZ, uint32_t sectorY,
+                            uint32_t sectorX, const struct Star *star, const char *starDescription);
+
+Camera OnStarClicked(Camera *camera, Vector3 *starPositionInWorldCoords);
+
+void DrawGalaxy(Camera *camera, Vector3 *cameraInitialPosition, float *distance);
+
+void RenderWorld(Vector3 *cameraInitialPosition, Camera *camera, float *distance);
+
+Camera
+InitializeCamera(Vector3 *cameraInitialPosition, float cameraDistance, float horizontalDistance, float horizontalAngle,
+                 float verticalAngle);
+
+Camera camera;
+float cameraDistance;
+float verticalAngle;
+float horizontalAngle;
+float horizontalDistance;
+Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
+
 Camera InitializeCamera(Vector3 *cameraInitialPosition, float cameraDistance, float horizontalDistance, float horizontalAngle,
                         float verticalAngle) {
     Camera camera = {0};
@@ -29,6 +62,9 @@ void RenderWorld(Vector3 *cameraInitialPosition, Camera *camera, float *distance
 
     EndMode3D();
 
+    char galaxy_offset[50];
+    sprintf(galaxy_offset, "Galaxy Offset = [%d, %d, %d]", (int)Galaxy.offset.x, (int)Galaxy.offset.y, (int)Galaxy.offset.z);
+    DrawText(galaxy_offset, 200, 10, 30, RAYWHITE);
     DrawFPS(10, 10);
 
     EndDrawing();
@@ -216,3 +252,39 @@ void AdjustCameraView(float *distance, float *horizontalDistance,
     camera->position.y = *distance * sinf(*verticalAngle * PI / 180.0f);
 }
 
+void InitGraphics(const int width, const int height)
+{
+    cameraDistance = 100.0f;
+    verticalAngle = 45.0f;
+    horizontalAngle = 90.0f;
+    horizontalDistance =
+            cameraDistance *
+            cosf(verticalAngle * PI / 180.0f);
+    Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
+    camera = InitializeCamera(&cameraInitialPosition, cameraDistance, horizontalDistance, horizontalAngle,
+                                     verticalAngle);
+    InitWindow(width, height, "TleilaxRL");
+}
+
+void UpdateGraphics()
+{
+    camera = AdjustCameraOnUserInput(&camera, &cameraDistance, &verticalAngle, &horizontalAngle,
+                                     &horizontalDistance);
+}
+
+void RenderGraphics()
+{
+    RenderWorld(&cameraInitialPosition, &camera, &cameraDistance);
+}
+
+void DestroyGraphics()
+{
+    CloseWindow();
+}
+
+struct Graphics Graphics = {
+        .Initialize = InitGraphics,
+        .Update = UpdateGraphics,
+        .Render = RenderGraphics,
+        .Destroy = DestroyGraphics
+};

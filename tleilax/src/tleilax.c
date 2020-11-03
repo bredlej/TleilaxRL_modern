@@ -1,4 +1,5 @@
 #include <tleilax/tleilax.h>
+#include "tleilax_statemachine.c"
 
 void print_version(void)
 {
@@ -56,6 +57,10 @@ void init()
         Tleilax.starNames[GREEK] = LoadNames("scripts/lua/old/names/greek");
         Tleilax.starNames[INDIAN] = LoadNames("scripts/lua/old/names/indian");
     }
+
+    Galaxy.offset.x = 0.0f;
+    Galaxy.offset.y = 0.0f;
+    Galaxy.offset.z = 0.0f;
 }
 
 void destroy()
