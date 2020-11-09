@@ -2,6 +2,7 @@ set(HEADER_LIST "${Tleilax_SOURCE_DIR}/include/tleilax/tleilax.h")
 set(GALAXY_HEADER "${Tleilax_SOURCE_DIR}/include/galaxy/galaxy.h")
 set(RANDOM_HEADER "${Tleilax_SOURCE_DIR}/include/random/random.h")
 set(LUA_HEADERS "${Tleilax_SOURCE_DIR}/include/lua_utils/lua_utils.h")
+set(ECS_HEADERS "${Tleilax_SOURCE_DIR}/include/ECS/ecs.h")
 
 add_library (random random.c ${RANDOM_HEADER})
 target_link_libraries(random PCG-random)
@@ -17,6 +18,9 @@ target_include_directories(galaxy PUBLIC ../include)
 add_library(graphics graphics.c "${Tleilax_SOURCE_DIR}/include/tleilax/graphics.h")
 target_link_libraries(graphics raylib)
 target_include_directories(graphics PUBLIC ../include)
+
+add_library(ECS ecs.c ${ECS_HEADERS})
+target_include_directories(ECS PUBLIC ../include)
 
 add_library(tleilax_library tleilax.c ${HEADER_LIST})
 target_link_libraries(tleilax_library random galaxy C_StateMachine graphics)
