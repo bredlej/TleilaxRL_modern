@@ -8,6 +8,7 @@
 typedef enum COMPONENT_TYPE {
     POSITION,
     ROTATION,
+    SCALE,
     MAX_COMPONENT_TYPES
 } ComponentType;
 
@@ -29,9 +30,17 @@ typedef struct world {
 } World;
 
 World *CreateWorld();
+
 void DestroyWorld(World *);
+
+void DestroyEntities(Entity *);
+
 Entity *AddEntity(World *);
+
+int RemoveEntity(World *, const int entityId);
+
 Component *AddComponent(Entity *entity, const ComponentType type, void *data);
 
+int RemoveComponent(Entity *entity, const ComponentType);
 
 #endif //TANKS_ECS_H

@@ -4,8 +4,8 @@
 int main(int argc, char *argv[]) {
     print_version();
 
-    const int screenWidth = 1800;
-    const int screenHeight = 1450;
+    const int screenWidth = 800;
+    const int screenHeight = 600;
 
     Tleilax.Initialize();
     Graphics.Initialize(screenWidth, screenHeight);

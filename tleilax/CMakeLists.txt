@@ -16,4 +16,4 @@ add_subdirectory(src)
 add_subdirectory(apps)
 add_subdirectory(tests)
 
-include_directories(${SDL2_INCLUDE_DIRS})
+#include_directories(${SDL2_INCLUDE_DIRS})
