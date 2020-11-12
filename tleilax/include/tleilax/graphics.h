@@ -11,6 +11,11 @@
 #include <tleilax/tleilax.h>
 #include <stdint.h>
 
+void UpdateGalaxyView(void);
+void RenderGalaxyView(void);
+void UpdateIntro(void);
+void RenderIntro(void);
+
 struct Graphics {
     void (*Initialize)(const int width, const int height);
     void (*Update)(void);
@@ -19,4 +24,5 @@ struct Graphics {
 };
 
 extern struct Graphics Graphics;
+
 #endif //TLEILAX_GRAPHICS_H

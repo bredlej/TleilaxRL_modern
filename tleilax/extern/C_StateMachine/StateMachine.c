@@ -71,7 +71,7 @@ void _SM_StateEngine(SM_StateMachine* self, const SM_StateMachineConst* selfCons
 
         // Execute the state action passing in event data
         ASSERT_TRUE(state != NULL);
-        state(self, pDataTemp);
+          state(self, pDataTemp);
 
         // If event data was used, then delete it
         if (pDataTemp)

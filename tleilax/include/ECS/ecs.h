@@ -43,4 +43,6 @@ Component *AddComponent(Entity *entity, const ComponentType type, void *data);
 
 int RemoveComponent(Entity *entity, const ComponentType);
 
+Component *GetComponent(const Entity *entity, const ComponentType type);
+
 #endif //TANKS_ECS_H
