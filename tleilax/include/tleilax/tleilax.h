@@ -66,8 +66,8 @@ STATE_DECLARE(Intro, TleilaxUIData)
 STATE_DECLARE(GalaxyView, TleilaxUIData)
 
 BEGIN_STATE_MAP(TleilaxUI)
-  STATE_MAP_ENTRY(ST_Intro)
-  STATE_MAP_ENTRY(ST_GalaxyView)
+STATE_MAP_ENTRY(ST_Intro)
+STATE_MAP_ENTRY(ST_GalaxyView)
 END_STATE_MAP(TleilaxUI)
 
 #endif

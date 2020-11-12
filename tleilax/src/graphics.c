@@ -5,11 +5,6 @@
 #include "state_views/galaxy_view.c"
 #include "state_views/intro_view.c"
 
-void DestroyGraphics()
-{
-    CloseWindow();
-}
-
 void Initialize(const int width, const int height) {
   /* Start with render and update callbacks of Intro state */
   tleilaxUI.Render = RenderIntro;
@@ -19,20 +14,20 @@ void Initialize(const int width, const int height) {
   InitGraphics(100, 100);
 }
 
+void Update() {
+  TleilaxUI *tleilaxUIState = TleilaxUISMObj.pInstance;
+  tleilaxUIState->Update();
+}
+
 void Render() {
   /* Render current state */
   TleilaxUI *tleilaxUIState = TleilaxUISMObj.pInstance;
   tleilaxUIState->Render();
 }
 
-void Update() {
-  TleilaxUI *tleilaxUIState = TleilaxUISMObj.pInstance;
-  tleilaxUIState->Update();
-}
+void Destroy() { CloseWindow(); }
 
-struct Graphics Graphics = {
-        .Initialize = Initialize,
-        .Update = Update,
-        .Render = Render,
-        .Destroy = DestroyGraphics
-};
+struct Graphics Graphics = {.Initialize = Initialize,
+                            .Update = Update,
+                            .Render = Render,
+                            .Destroy = Destroy};

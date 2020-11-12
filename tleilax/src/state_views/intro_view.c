@@ -4,7 +4,7 @@
 
 void UpdateIntro() {
   if (IsKeyPressed(KEY_TAB)) {
-    TleilaxUIData *data =SM_XAlloc(sizeof(TleilaxUIData));
+    TleilaxUIData *data = SM_XAlloc(sizeof(TleilaxUIData));
     data->Render = RenderGalaxyView;
     data->Update = UpdateGalaxyView;
     data->HandleInput = NULL;
@@ -15,6 +15,6 @@ void UpdateIntro() {
 void RenderIntro() {
   BeginDrawing();
   ClearBackground(BLACK);
-  DrawText("Tleilax",100,100, 50, RAYWHITE);
+  DrawText("Tleilax", 100, 100, 50, RAYWHITE);
   EndDrawing();
 }
