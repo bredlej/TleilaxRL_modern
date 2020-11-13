@@ -8,6 +8,7 @@ void UpdateIntro() {
     data->Render = RenderGalaxyView;
     data->Update = UpdateGalaxyView;
     data->HandleInput = NULL;
+
     SM_Event(TleilaxUISM, TLX_ShowGalaxy, data);
   }
 }

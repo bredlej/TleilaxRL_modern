@@ -1,12 +1,12 @@
 #include <galaxy/galaxy.h>
 
 struct StarNames *LoadNames(char *fileName) {
-  FILE *file;
-  errno_t error;
+  FILE *file = fopen(fileName, "r");
+  int error;
 
   uint32_t amountNames = 100;
   struct StarNames *starNames = malloc(sizeof *starNames);
-  if (error = fopen_s(&file, fileName, "r") != 0) {
+  if (!file) {
     fprintf(stderr, "Cannot open file %s: %s\n", fileName, strerror(error));
   } else {
 

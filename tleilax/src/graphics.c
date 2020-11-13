@@ -6,6 +6,8 @@
 #include "state_views/intro_view.c"
 
 void Initialize(const int width, const int height) {
+
+  Tleilax.Initialize();
   /* Start with render and update callbacks of Intro state */
   tleilaxUI.Render = RenderIntro;
   tleilaxUI.Update = UpdateIntro;
@@ -25,7 +27,10 @@ void Render() {
   tleilaxUIState->Render();
 }
 
-void Destroy() { CloseWindow(); }
+void Destroy() {
+  Tleilax.Destroy();
+  CloseWindow();
+}
 
 struct Graphics Graphics = {.Initialize = Initialize,
                             .Update = Update,

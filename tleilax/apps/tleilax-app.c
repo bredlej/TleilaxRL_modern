@@ -6,7 +6,6 @@ int main(int argc, char *argv[]) {
   const int screenWidth = 960;
   const int screenHeight = 640;
 
-
   Graphics.Initialize(screenWidth, screenHeight);
 
   while (!WindowShouldClose()) {
