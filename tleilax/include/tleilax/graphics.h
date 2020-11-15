@@ -13,6 +13,8 @@
 
 void UpdateGalaxyView(void);
 void RenderGalaxyView(void);
+void UpdateStarSystemView(void);
+void RenderStarSystemView(void);
 void UpdateIntro(void);
 void RenderIntro(void);
 

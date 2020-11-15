@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #define AMOUNT_SECTORS_X 50
 #define AMOUNT_SECTORS_Y 50
@@ -30,44 +31,46 @@ struct Tleilax {
   void (*Destroy)(void);
   struct TleilaxConfig config;
   struct StarNames **starNames;
+  Coordinates *selectedCoordinates;
+  struct Star *selectedStar;
 };
 extern struct Tleilax Tleilax;
 
-typedef struct Coordinates {
-  int x;
-  int y;
-  int z;
-} Coordinates;
-
-typedef struct TleilaxUI {
-  void (*Render)(void);
-  void (*Update)(void);
-  void (*HandleInput)(void);
-} TleilaxUI;
+typedef struct TleilaxState {
+  StarSystem *starSystem;
+} TleilaxState;
 
 typedef struct TleilaxUIData {
-  void (*Render)(void);
-  void (*Update)(void);
-  void (*HandleInput)(void);
+
 } TleilaxUIData;
 
+typedef struct TleilaxStarSystemData {
+  StarSystem *starSystem;
+} StarSystemData;
+
 /* Prepare initial state of Tleilax State Machine */
-static TleilaxUI tleilaxUI;
+static TleilaxState tleilaxUI;
 
 /* Define Tleilax State Machine */
 static SM_DEFINE(TleilaxUISM, &tleilaxUI);
 
-enum States { ST_INTRO, ST_GALAXY_VIEW, ST_MAX_STATES };
+enum States { ST_INTRO, ST_GALAXY_VIEW, ST_STARSYSTEM_VIEW, ST_MAX_STATES };
 
-EVENT_DECLARE(TLX_ShowGalaxy, TleilaxUIData)
-EVENT_DECLARE(TLX_ShowIntro, TleilaxUIData)
+EVENT_DECLARE(TLX_ShowGalaxy, NoEventData)
+EVENT_DECLARE(TLX_ShowIntro, NoEventData)
+EVENT_DECLARE(TLX_ShowStarSystem, StarSystemData)
 
-STATE_DECLARE(Intro, TleilaxUIData)
-STATE_DECLARE(GalaxyView, TleilaxUIData)
+STATE_DECLARE(Intro, NoEventData)
+STATE_DECLARE(GalaxyView, NoEventData)
+STATE_DECLARE(StarSystemView, NoEventData)
+ENTRY_DECLARE(StarSystemView, StarSystemData)
+GUARD_DECLARE(StarSystemView, NoEventData)
+EXIT_DECLARE(StarSystemView)
 
-BEGIN_STATE_MAP(TleilaxUI)
-STATE_MAP_ENTRY(ST_Intro)
-STATE_MAP_ENTRY(ST_GalaxyView)
-END_STATE_MAP(TleilaxUI)
+BEGIN_STATE_MAP_EX(TleilaxState)
+STATE_MAP_ENTRY_EX(ST_Intro)
+STATE_MAP_ENTRY_EX(ST_GalaxyView)
+STATE_MAP_ENTRY_ALL_EX(ST_StarSystemView, GD_StarSystemView, EN_StarSystemView, EX_StarSystemView)
+END_STATE_MAP_EX(TleilaxState)
 
 #endif

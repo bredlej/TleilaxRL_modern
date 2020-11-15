@@ -47,7 +47,6 @@ void init() {
     Tleilax.starNames[GREEK] = LoadNames("scripts/lua/old/names/greek");
     Tleilax.starNames[INDIAN] = LoadNames("scripts/lua/old/names/indian");
   }
-
   Galaxy.offset.x = 0.0f;
   Galaxy.offset.y = 0.0f;
   Galaxy.offset.z = 0.0f;
@@ -61,32 +60,60 @@ void destroy() {
 
 struct Tleilax Tleilax = {.Initialize = init, .Destroy = destroy};
 
-EVENT_DEFINE(TLX_ShowGalaxy, TleilaxUIData){
+EVENT_DEFINE(TLX_ShowGalaxy, NoEventData){
     BEGIN_TRANSITION_MAP TRANSITION_MAP_ENTRY(ST_GALAXY_VIEW) // ST_Intro
     TRANSITION_MAP_ENTRY(CANNOT_HAPPEN)                       // ST_GalaxyView
-    END_TRANSITION_MAP(TleilaxUI, pEventData)}
+    TRANSITION_MAP_ENTRY(ST_GALAXY_VIEW) // ST_StarSystemView
+    END_TRANSITION_MAP(TleilaxState, NULL)}
 
-EVENT_DEFINE(TLX_ShowIntro, TleilaxUIData){
+EVENT_DEFINE(TLX_ShowIntro, NoEventData){
     BEGIN_TRANSITION_MAP TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
     TRANSITION_MAP_ENTRY(ST_INTRO)                           // ST_GalaxyView
-    END_TRANSITION_MAP(TleilaxUI, pEventData)}
+    TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_StarSystemView
+    END_TRANSITION_MAP(TleilaxState, NULL)}
 
-STATE_DEFINE(Intro, TleilaxUIData) {
-  ASSERT_TRUE(pEventData);
-  TleilaxUI *tleilaxUi = SM_GetInstance(TleilaxUI);
-  tleilaxUi->Render = pEventData->Render;
-  tleilaxUi->Update = pEventData->Update;
-  tleilaxUi->HandleInput = pEventData->HandleInput;
+EVENT_DEFINE(TLX_ShowStarSystem, StarSystemData){
+    BEGIN_TRANSITION_MAP TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
+    TRANSITION_MAP_ENTRY(ST_STARSYSTEM_VIEW)                 // ST_GalaxyView
+    TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_StarSystemView
+    END_TRANSITION_MAP(TleilaxState, pEventData)}
 
+STATE_DEFINE(Intro, NoEventData) {
+  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
+  tleilaxUi->starSystem = NULL;
   printf("Running Intro state.\n");
 }
 
-STATE_DEFINE(GalaxyView, TleilaxUIData) {
-  ASSERT_TRUE(pEventData);
-  TleilaxUI *tleilaxUi = SM_GetInstance(TleilaxUI);
-  tleilaxUi->Render = pEventData->Render;
-  tleilaxUi->Update = pEventData->Update;
-  tleilaxUi->HandleInput = pEventData->HandleInput;
-
+STATE_DEFINE(GalaxyView, NoEventData) {
+  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
+  if (tleilaxUi->starSystem) {
+    Galaxy.DestroyStarSystem(tleilaxUi->starSystem);
+  }
   printf("Running GalaxyView state.\n");
+}
+
+STATE_DEFINE(StarSystemView, NoEventData) {
+  ASSERT_TRUE(pEventData);
+
+  printf("Running StarSystemView state.\n");
+}
+
+GUARD_DEFINE(StarSystemView, NoEventData) {
+  printf("GUARD StarSystemView\n");
+  return Tleilax.selectedCoordinates != NULL && Tleilax.selectedStar != NULL;
+}
+
+ENTRY_DEFINE(StarSystemView, StarSystemData) {
+  printf("ENTRY StarSystemView\n");
+  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
+  tleilaxUi->starSystem = pEventData->starSystem;
+}
+
+EXIT_DEFINE(StarSystemView) {
+  printf("EXIT StarSystemView\n");
+  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
+  assert(tleilaxUi->starSystem);
+  Galaxy.DestroyStarSystem(tleilaxUi->starSystem);
+  tleilaxUi->starSystem = NULL;
+  Tleilax.selectedStar = NULL;
 }

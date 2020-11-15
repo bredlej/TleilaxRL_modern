@@ -19,7 +19,8 @@ void PrepareStarDescription(float xOffset, float yOffset, float zOffset,
                             uint32_t sectorX, const struct Star *star,
                             const char *starDescription);
 
-Camera OnStarClicked(Camera *camera, Vector3 *starPositionInWorldCoords);
+Camera OnStarClicked(Camera *camera, const Vector3 *starPositionInWorldCoords,
+                     struct Star *pStar);
 
 void DrawGalaxy(Camera *camera, Vector3 *cameraInitialPosition,
                 float *distance);
@@ -121,24 +122,43 @@ void DrawGalaxy(Camera *camera, Vector3 *cameraInitialPosition,
             DescribeStar(camera, &starPositionInWorldCoords, textAboveStar);
             BeginMode3D((*camera));
 
-            (*camera) = OnStarClicked(camera, &starPositionInWorldCoords);
+            (*camera) = OnStarClicked(camera, &starPositionInWorldCoords,
+                                      starInSectorXYZ);
           } else {
             RenderStar(starInSectorXYZ, &starPositionInWorldCoords);
           }
-          free(starInSectorXYZ);
+          if (starInSectorXYZ != Tleilax.selectedStar) {
+            free(starInSectorXYZ);
+          }
         }
       }
     }
   }
   if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+    if (Tleilax.selectedCoordinates) {
+      free(Tleilax.selectedCoordinates);
+      Tleilax.selectedCoordinates = NULL;
+    }
     (*camera).target = (*cameraInitialPosition);
     (*distance) = 100.0f;
   }
 }
 
-Camera OnStarClicked(Camera *camera, Vector3 *starPositionInWorldCoords) {
+Camera OnStarClicked(Camera *camera, const Vector3 *starPositionInWorldCoords,
+                     struct Star *pStar) {
   if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
     (*camera).target = (*starPositionInWorldCoords);
+    if (Tleilax.selectedCoordinates) {
+      free(Tleilax.selectedCoordinates);
+    }
+    Coordinates *selectedCoordinates = malloc(sizeof(*selectedCoordinates));
+    if (selectedCoordinates) {
+      selectedCoordinates->x = starPositionInWorldCoords->x;
+      selectedCoordinates->y = starPositionInWorldCoords->y;
+      selectedCoordinates->z = starPositionInWorldCoords->z;
+      Tleilax.selectedCoordinates = selectedCoordinates;
+      Tleilax.selectedStar = pStar;
+    }
   }
   return (*camera);
 }
@@ -270,11 +290,16 @@ void UpdateGalaxyView() {
   camera = AdjustCameraOnUserInput(&camera, &cameraDistance, &verticalAngle,
                                    &horizontalAngle, &horizontalDistance);
   if (IsKeyPressed(KEY_TAB)) {
-    TleilaxUIData *data = SM_XAlloc(sizeof(TleilaxUIData));
-    data->Render = RenderIntro;
-    data->Update = UpdateIntro;
-    data->HandleInput = NULL;
-    SM_Event(TleilaxUISM, TLX_ShowIntro, data);
+    SM_Event(TleilaxUISM, TLX_ShowIntro, NULL);
+  }
+
+  if (Tleilax.selectedCoordinates && IsKeyPressed(KEY_ENTER)) {
+    StarSystem *starSystem = Galaxy.CreateStarSystem(Tleilax.selectedStar, Tleilax.selectedCoordinates);
+    starSystem->coordinates = Tleilax.selectedCoordinates;
+    StarSystemData *starSystemData = SM_XAlloc(sizeof(*starSystemData));
+    starSystemData->starSystem = starSystem;
+
+    SM_Event(TleilaxUISM, TLX_ShowStarSystem, starSystemData);
   }
 }
 

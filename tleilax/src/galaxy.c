@@ -53,8 +53,9 @@ struct StarNames *LoadNames(char *fileName) {
   return starNames;
 }
 
-struct Star *CreateStar(char *name, float size, enum STAR_TYPE type) {
-  struct Star *newStar = malloc(sizeof *newStar);
+Star *CreateStar(const char *name, const float size,
+                 const enum STAR_TYPE type) {
+  Star *newStar = malloc(sizeof *newStar);
   newStar->name = name;
   newStar->size = size;
   newStar->type = type;
@@ -62,4 +63,48 @@ struct Star *CreateStar(char *name, float size, enum STAR_TYPE type) {
   return newStar;
 }
 
-struct Galaxy Galaxy = {.CreateStar = CreateStar};
+Planet *CreatePlanet(const char *name, const enum PLANET_TYPE type,
+                     const float distanceFromStar) {
+  Planet *newPlanet = malloc(sizeof *newPlanet);
+  newPlanet->name = name;
+  newPlanet->type = type;
+  newPlanet->distanceFromStar = distanceFromStar;
+  newPlanet->next = NULL;
+
+  return newPlanet;
+}
+
+StarSystem *CreateStarSystem(const Star *star, const Coordinates *coordinates) {
+  StarSystem *newStarSystem = malloc(sizeof(*newStarSystem));
+  newStarSystem->star = star;
+  newStarSystem->coordinates = coordinates;
+  newStarSystem->planets = NULL;
+
+  return newStarSystem;
+}
+
+void DestroyPlanet(Planet *planet) {
+  printf("Destroying planet=[%s]\n", planet->name);
+  free(planet);
+}
+
+void DestroyStarSystem(StarSystem *starSystem) {
+  Planet *planet = starSystem->planets;
+  while (planet) {
+    Planet *toDelete = planet;
+    planet = planet->next;
+    DestroyPlanet(toDelete);
+  }
+  assert(starSystem->star);
+  printf("Destroying Star=[%s]\n", starSystem->star->name);
+  free(starSystem->star);
+  starSystem->star = NULL;
+  printf("Destroying StarSystem=[%d]\n", &starSystem);
+  free(starSystem);
+}
+
+struct Galaxy Galaxy = {.CreateStar = CreateStar,
+                        .CreatePlanet = CreatePlanet,
+                        .CreateStarSystem = CreateStarSystem,
+                        .DestroyPlanet = DestroyPlanet,
+                        .DestroyStarSystem = DestroyStarSystem};
