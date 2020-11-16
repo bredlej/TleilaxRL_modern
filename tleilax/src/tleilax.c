@@ -60,23 +60,32 @@ void destroy() {
 
 struct Tleilax Tleilax = {.Initialize = init, .Destroy = destroy};
 
-EVENT_DEFINE(TLX_ShowGalaxy, NoEventData){
-    BEGIN_TRANSITION_MAP TRANSITION_MAP_ENTRY(ST_GALAXY_VIEW) // ST_Intro
-    TRANSITION_MAP_ENTRY(CANNOT_HAPPEN)                       // ST_GalaxyView
-    TRANSITION_MAP_ENTRY(ST_GALAXY_VIEW) // ST_StarSystemView
-    END_TRANSITION_MAP(TleilaxState, NULL)}
+EVENT_DEFINE(TLX_ShowGalaxy, NoEventData)
+    {
+      BEGIN_TRANSITION_MAP
+        TRANSITION_MAP_ENTRY(ST_GALAXY_VIEW) // ST_Intro
+        TRANSITION_MAP_ENTRY(CANNOT_HAPPEN)  // ST_GalaxyView
+        TRANSITION_MAP_ENTRY(ST_GALAXY_VIEW) // ST_StarSystemView
+      END_TRANSITION_MAP(TleilaxState, pEventData)
+    }
 
-EVENT_DEFINE(TLX_ShowIntro, NoEventData){
-    BEGIN_TRANSITION_MAP TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
-    TRANSITION_MAP_ENTRY(ST_INTRO)                           // ST_GalaxyView
-    TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_StarSystemView
-    END_TRANSITION_MAP(TleilaxState, NULL)}
+EVENT_DEFINE(TLX_ShowIntro, NoEventData)
+    {
+      BEGIN_TRANSITION_MAP
+        TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
+        TRANSITION_MAP_ENTRY(ST_INTRO)                           // ST_GalaxyView
+        TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_StarSystemView
+      END_TRANSITION_MAP(TleilaxState, pEventData)
+    }
 
-EVENT_DEFINE(TLX_ShowStarSystem, StarSystemData){
-    BEGIN_TRANSITION_MAP TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
-    TRANSITION_MAP_ENTRY(ST_STARSYSTEM_VIEW)                 // ST_GalaxyView
-    TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_StarSystemView
-    END_TRANSITION_MAP(TleilaxState, pEventData)}
+EVENT_DEFINE(TLX_ShowStarSystem, StarSystemData)
+    {
+      BEGIN_TRANSITION_MAP
+        TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
+        TRANSITION_MAP_ENTRY(ST_STARSYSTEM_VIEW) // ST_GalaxyView
+        TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_StarSystemView
+      END_TRANSITION_MAP(TleilaxState, pEventData)
+    }
 
 STATE_DEFINE(Intro, NoEventData) {
   TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);

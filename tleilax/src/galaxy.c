@@ -1,6 +1,6 @@
 #include <galaxy/galaxy.h>
 
-struct StarNames *LoadNames(char *fileName) {
+static struct StarNames *LoadNames(char *fileName) {
   FILE *file = fopen(fileName, "r");
   int error;
 
@@ -15,12 +15,12 @@ struct StarNames *LoadNames(char *fileName) {
       fprintf(stderr, "Out of memory.\n");
       exit(3);
     }
-    int i;
+    uint32_t i;
     for (i = 0; 1; i++) {
-      int j;
+      uint32_t j;
 
       if (i >= amountNames) {
-        int new_size;
+        uint32_t new_size;
 
         new_size = amountNames * 2;
         names = (char **)realloc(names, sizeof(char *) * new_size);
@@ -53,7 +53,7 @@ struct StarNames *LoadNames(char *fileName) {
   return starNames;
 }
 
-Star *CreateStar(const char *name, const float size,
+static Star *CreateStar(const char *name, const float size,
                  const enum STAR_TYPE type) {
   Star *newStar = malloc(sizeof *newStar);
   newStar->name = name;
@@ -63,7 +63,7 @@ Star *CreateStar(const char *name, const float size,
   return newStar;
 }
 
-Planet *CreatePlanet(const char *name, const enum PLANET_TYPE type,
+static Planet *CreatePlanet(const char *name, const enum PLANET_TYPE type,
                      const float distanceFromStar) {
   Planet *newPlanet = malloc(sizeof *newPlanet);
   newPlanet->name = name;
@@ -74,7 +74,7 @@ Planet *CreatePlanet(const char *name, const enum PLANET_TYPE type,
   return newPlanet;
 }
 
-StarSystem *CreateStarSystem(const Star *star, const Coordinates *coordinates) {
+static StarSystem *CreateStarSystem(const Star *star, const Coordinates *coordinates) {
   StarSystem *newStarSystem = malloc(sizeof(*newStarSystem));
   newStarSystem->star = star;
   newStarSystem->coordinates = coordinates;
@@ -83,12 +83,12 @@ StarSystem *CreateStarSystem(const Star *star, const Coordinates *coordinates) {
   return newStarSystem;
 }
 
-void DestroyPlanet(Planet *planet) {
+static void DestroyPlanet(Planet *planet) {
   printf("Destroying planet=[%s]\n", planet->name);
   free(planet);
 }
 
-void DestroyStarSystem(StarSystem *starSystem) {
+static void DestroyStarSystem(StarSystem *starSystem) {
   Planet *planet = starSystem->planets;
   while (planet) {
     Planet *toDelete = planet;
@@ -99,7 +99,7 @@ void DestroyStarSystem(StarSystem *starSystem) {
   printf("Destroying Star=[%s]\n", starSystem->star->name);
   free(starSystem->star);
   starSystem->star = NULL;
-  printf("Destroying StarSystem=[%d]\n", &starSystem);
+  printf("Destroying StarSystem\n");
   free(starSystem);
 }
 

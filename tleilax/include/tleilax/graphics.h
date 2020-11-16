@@ -10,9 +10,8 @@
 #include <raylib.h>
 #include <stdint.h>
 #include <tleilax/tleilax.h>
+#include <tleilax/views/galaxy_view.h>
 
-void UpdateGalaxyView(void);
-void RenderGalaxyView(void);
 void UpdateStarSystemView(void);
 void RenderStarSystemView(void);
 void UpdateIntro(void);

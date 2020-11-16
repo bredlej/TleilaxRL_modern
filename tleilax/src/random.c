@@ -1,12 +1,12 @@
 #include <random/random.h>
 #include "pcg_basic.h"
 
-pcg32_random_t rng;
+static pcg32_random_t rng;
 
 uint32_t rnd(void) { return pcg32_random_r(&rng); }
 
 double rndDouble(const double min, const double max) {
-    return ((double)rnd() / (double)(0xFFFFFFFF)) * (max - min) + min;
+    return (rnd() / (double)(0xFFFFFFFF)) * (max - min) + min;
 }
 
 uint32_t rndInt(const uint32_t min, const uint32_t max) {

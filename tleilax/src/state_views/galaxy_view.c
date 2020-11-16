@@ -1,8 +1,10 @@
 //
 // Created by geoco on 12.11.2020.
 //
+#include <tleilax/views/galaxy_view.h>
+
 void DescribeStar(Camera *camera, Vector3 *starPositionInWorldCoords,
-                  const char *starDescription);
+                  char *starDescription);
 
 void RenderStar(const struct Star *star, Vector3 *starPositionInWorldCoords);
 
@@ -17,7 +19,7 @@ Camera AdjustCameraOnUserInput(Camera *camera, float *distance,
 void PrepareStarDescription(float xOffset, float yOffset, float zOffset,
                             uint32_t sectorZ, uint32_t sectorY,
                             uint32_t sectorX, const struct Star *star,
-                            const char *starDescription);
+                            char *starDescription);
 
 Camera OnStarClicked(Camera *camera, const Vector3 *starPositionInWorldCoords,
                      struct Star *pStar);
@@ -31,13 +33,6 @@ void RenderWorld(Vector3 *cameraInitialPosition, Camera *camera,
 Camera InitializeCamera(Vector3 *cameraInitialPosition, float cameraDistance,
                         float horizontalDistance, float horizontalAngle,
                         float verticalAngle);
-
-Camera camera;
-float cameraDistance;
-float verticalAngle;
-float horizontalAngle;
-float horizontalDistance;
-Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
 
 Camera InitializeCamera(Vector3 *cameraInitialPosition, float cameraDistance,
                         float horizontalDistance, float horizontalAngle,
@@ -84,9 +79,9 @@ void DrawGalaxy(Camera *camera, Vector3 *cameraInitialPosition,
     for (uint32_t sectorY = 0; sectorY < AMOUNT_SECTORS_Y; sectorY++) {
       for (uint32_t sectorX = 0; sectorX < AMOUNT_SECTORS_X; sectorX++) {
         struct Star *starInSectorXYZ =
-            StarAt(sectorX + floorf(Galaxy.offset.x),
-                   sectorY + floorf(Galaxy.offset.y),
-                   sectorZ + floorf(Galaxy.offset.z));
+            StarAt(sectorX + (uint32_t) floorf(Galaxy.offset.x),
+                   sectorY + (uint32_t) floorf(Galaxy.offset.y),
+                   sectorZ + (uint32_t) floorf(Galaxy.offset.z));
         if (starInSectorXYZ) {
 
           Vector3 starPositionInWorldCoords = {(float)sectorX - xOffset,
@@ -153,9 +148,9 @@ Camera OnStarClicked(Camera *camera, const Vector3 *starPositionInWorldCoords,
     }
     Coordinates *selectedCoordinates = malloc(sizeof(*selectedCoordinates));
     if (selectedCoordinates) {
-      selectedCoordinates->x = starPositionInWorldCoords->x;
-      selectedCoordinates->y = starPositionInWorldCoords->y;
-      selectedCoordinates->z = starPositionInWorldCoords->z;
+      selectedCoordinates->x = (int) starPositionInWorldCoords->x;
+      selectedCoordinates->y = (int) starPositionInWorldCoords->y;
+      selectedCoordinates->z = (int) starPositionInWorldCoords->z;
       Tleilax.selectedCoordinates = selectedCoordinates;
       Tleilax.selectedStar = pStar;
     }
@@ -166,7 +161,7 @@ Camera OnStarClicked(Camera *camera, const Vector3 *starPositionInWorldCoords,
 void PrepareStarDescription(float xOffset, float yOffset, float zOffset,
                             uint32_t sectorZ, uint32_t sectorY,
                             uint32_t sectorX, const struct Star *star,
-                            const char *starDescription) {
+                            char *starDescription) {
   sprintf(starDescription, "%s [%d, %d, %d]", star->name,
           sectorX - (uint32_t)xOffset + (uint32_t)floorf(Galaxy.offset.x),
           sectorY - (uint32_t)yOffset + (uint32_t)floorf(Galaxy.offset.y),
@@ -255,7 +250,7 @@ void RenderStar(const struct Star *star, Vector3 *starPositionInWorldCoords) {
 }
 
 void DescribeStar(Camera *camera, Vector3 *starPositionInWorldCoords,
-                  const char *starDescription) {
+                  char *starDescription) {
   Vector2 starPositionInScreenCoords = GetWorldToScreen(
       (Vector3){(*starPositionInWorldCoords).x, (*starPositionInWorldCoords).y,
                 (*starPositionInWorldCoords).z},
@@ -276,33 +271,41 @@ void AdjustCameraView(float *distance, float *horizontalDistance,
   camera->position.y = *distance * sinf(*verticalAngle * PI / 180.0f);
 }
 
-void InitGraphics(const int width, const int height) {
-  cameraDistance = 100.0f;
-  verticalAngle = 45.0f;
-  horizontalAngle = 90.0f;
-  horizontalDistance = cameraDistance * cosf(verticalAngle * PI / 180.0f);
-  Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
-  camera = InitializeCamera(&cameraInitialPosition, cameraDistance,
-                            horizontalDistance, horizontalAngle, verticalAngle);
+void UpdateGalaxyView() {
+  GalaxyView.camera = AdjustCameraOnUserInput(&GalaxyView.camera, &GalaxyView.cameraDistance, &GalaxyView.verticalAngle,
+                                   &GalaxyView.horizontalAngle, &GalaxyView.horizontalDistance);
+
 }
 
-void UpdateGalaxyView() {
-  camera = AdjustCameraOnUserInput(&camera, &cameraDistance, &verticalAngle,
-                                   &horizontalAngle, &horizontalDistance);
-  if (IsKeyPressed(KEY_TAB)) {
-    SM_Event(TleilaxUISM, TLX_ShowIntro, NULL);
-  }
+void RenderGalaxyView() {
+  RenderWorld(&GalaxyView.cameraInitialPosition, &GalaxyView.camera, &GalaxyView.cameraDistance);
+}
 
+void InitGraphics() {
+  Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
+  GalaxyView.camera = InitializeCamera(&cameraInitialPosition, GalaxyView.cameraDistance,
+                                       GalaxyView.horizontalDistance, GalaxyView.horizontalAngle, GalaxyView.verticalAngle);
+}
+
+void HandleInput(void)
+{
+  if (IsKeyPressed(KEY_TAB)) {
+    TLX_ShowIntro(GalaxyView.TleilaxStateMachineObj, NULL);
+  }
   if (Tleilax.selectedCoordinates && IsKeyPressed(KEY_ENTER)) {
     StarSystem *starSystem = Galaxy.CreateStarSystem(Tleilax.selectedStar, Tleilax.selectedCoordinates);
     starSystem->coordinates = Tleilax.selectedCoordinates;
     StarSystemData *starSystemData = SM_XAlloc(sizeof(*starSystemData));
     starSystemData->starSystem = starSystem;
 
-    SM_Event(TleilaxUISM, TLX_ShowStarSystem, starSystemData);
+    TLX_ShowStarSystem(GalaxyView.TleilaxStateMachineObj, starSystemData);
   }
 }
 
-void RenderGalaxyView() {
-  RenderWorld(&cameraInitialPosition, &camera, &cameraDistance);
-}
+struct GalaxyView GalaxyView = {
+    .Init = InitGraphics,
+    .Render = RenderGalaxyView,
+    .Update = UpdateGalaxyView,
+    .HandleInput = HandleInput
+};
+

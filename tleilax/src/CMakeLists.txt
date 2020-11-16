@@ -15,8 +15,12 @@ target_include_directories(lua_utils PUBLIC ../include)
 add_library(galaxy galaxy.c ${GALAXY_HEADER})
 target_include_directories(galaxy PUBLIC ../include)
 
+add_library(galaxy_view state_views/galaxy_view.c "${Tleilax_SOURCE_DIR}/include/tleilax/views/galaxy_view.h")
+target_link_libraries(galaxy_view raylib)
+target_include_directories(galaxy_view PUBLIC ../include)
+
 add_library(graphics graphics.c "${Tleilax_SOURCE_DIR}/include/tleilax/graphics.h")
-target_link_libraries(graphics raylib)
+target_link_libraries(graphics raylib galaxy_view)
 target_include_directories(graphics PUBLIC ../include)
 
 add_library(ECS ecs.c ${ECS_HEADERS})

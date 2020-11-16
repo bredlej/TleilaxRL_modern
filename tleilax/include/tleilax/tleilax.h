@@ -40,19 +40,15 @@ typedef struct TleilaxState {
   StarSystem *starSystem;
 } TleilaxState;
 
-typedef struct TleilaxUIData {
-
-} TleilaxUIData;
-
 typedef struct TleilaxStarSystemData {
   StarSystem *starSystem;
 } StarSystemData;
 
 /* Prepare initial state of Tleilax State Machine */
-static TleilaxState tleilaxUI;
+static TleilaxState tleilaxState;
 
 /* Define Tleilax State Machine */
-static SM_DEFINE(TleilaxUISM, &tleilaxUI);
+static SM_DEFINE(TleilaxStateMachine, &tleilaxState);
 
 enum States { ST_INTRO, ST_GALAXY_VIEW, ST_STARSYSTEM_VIEW, ST_MAX_STATES };
 
@@ -68,9 +64,9 @@ GUARD_DECLARE(StarSystemView, NoEventData)
 EXIT_DECLARE(StarSystemView)
 
 BEGIN_STATE_MAP_EX(TleilaxState)
-STATE_MAP_ENTRY_EX(ST_Intro)
-STATE_MAP_ENTRY_EX(ST_GalaxyView)
-STATE_MAP_ENTRY_ALL_EX(ST_StarSystemView, GD_StarSystemView, EN_StarSystemView, EX_StarSystemView)
+  STATE_MAP_ENTRY_EX(ST_Intro)
+  STATE_MAP_ENTRY_EX(ST_GalaxyView)
+  STATE_MAP_ENTRY_ALL_EX(ST_StarSystemView, GD_StarSystemView, EN_StarSystemView, EX_StarSystemView)
 END_STATE_MAP_EX(TleilaxState)
 
 #endif

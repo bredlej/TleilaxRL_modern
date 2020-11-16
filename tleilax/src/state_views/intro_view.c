@@ -4,7 +4,7 @@
 
 void UpdateIntro() {
   if (IsKeyPressed(KEY_TAB)) {
-    SM_Event(TleilaxUISM, TLX_ShowGalaxy, NULL);
+    SM_Event(TleilaxStateMachine, TLX_ShowGalaxy, NULL);
   }
 }
 

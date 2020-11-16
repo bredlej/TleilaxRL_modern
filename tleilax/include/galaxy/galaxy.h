@@ -1,5 +1,5 @@
-#ifndef _GALAXY_H_
-#define _GALAXY_H_
+#ifndef GALAXY_H_
+#define GALAXY_H_
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +10,7 @@ enum PLANET_TYPE { EARTHLIKE, GIANT, OCEAN, VOLCANIC, DWARF };
 
 struct StarNames {
   char **names;
-  size_t size;
+  uint32_t size;
 };
 
 typedef struct Coordinates {
@@ -55,5 +55,4 @@ struct Galaxy {
 };
 
 extern struct Galaxy Galaxy;
-extern struct Star;
-#endif // !_GALAXY_H_
+#endif // !GALAXY_H_
