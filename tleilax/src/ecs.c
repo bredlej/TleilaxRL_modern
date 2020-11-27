@@ -26,11 +26,11 @@ Entity *AddEntity(World *world) {
     }
     current->next = nextEntity;
   }
-  printf("Added entity=[%i]\n", nextEntity->id);
+  printf("Added entity=[%lu]\n", nextEntity->id);
   return nextEntity;
 }
 
-int RemoveEntity(World *world, const int entityId) {
+int RemoveEntity(World *world, const unsigned long entityId) {
   assert(world);
   assert(entityId);
   Entity *entity = world->entities;
@@ -38,12 +38,12 @@ int RemoveEntity(World *world, const int entityId) {
     if (entity->next == NULL) {
       DestroyEntities(entity);
       world->entities = NULL;
-      printf("Removed Entity=[%d] with no successors\n", entityId);
+      printf("Removed Entity=[%lu] with no successors\n", entityId);
     } else {
       world->entities = entity->next;
       entity->next = NULL;
       DestroyEntities(entity);
-      printf("Removed Entity=[%d]. Successor=[%d]\n", entityId,
+      printf("Removed Entity=[%lu]. Successor=[%lu]\n", entityId,
              world->entities->id);
     }
     return 1;
@@ -55,12 +55,12 @@ int RemoveEntity(World *world, const int entityId) {
           entity->next = nextEntity->next;
           nextEntity->next = NULL;
           DestroyEntities(nextEntity);
-          printf("Removed Entity=[%d]. Successor=[%d]\n", entityId,
+          printf("Removed Entity=[%lu]. Successor=[%lu]\n", entityId,
                  entity->next->id);
         } else {
           DestroyEntities(entity->next);
           entity->next = NULL;
-          printf("Removed Entity=[%d] with no successors\n", entityId);
+          printf("Removed Entity=[%lu] with no successors\n", entityId);
         }
         return 1;
       }
@@ -70,7 +70,7 @@ int RemoveEntity(World *world, const int entityId) {
   return 0;
 }
 
-World *CreateWorld() {
+World *CreateWorld(void) {
   World *world = malloc(sizeof(*world));
   if (!world)
     return NULL;
@@ -85,6 +85,10 @@ void DestroyComponents(Component *component) {
   while (component) {
     next = component->next;
     printf("Destroying component=[%i]\n", component->type);
+    if (component->data) {
+      printf(" > Destroying component data\n", component->type);
+      free(component->data);
+    }
     free(component);
     component = next;
   }
@@ -94,7 +98,7 @@ void DestroyEntities(Entity *entity) {
   Entity *next;
   while (entity) {
     next = entity->next;
-    printf("Destroying entity=[%i]\n", entity->id);
+    printf("Destroying entity=[%lu]\n", entity->id);
     DestroyComponents(entity->components);
     free(entity);
     entity = next;
@@ -103,8 +107,6 @@ void DestroyEntities(Entity *entity) {
 
 void DestroyWorld(World *world) {
   assert(world);
-  Entity *entity, *next;
-  entity = world->entities;
   DestroyEntities(world->entities);
   printf("Destroying world\n");
   free(world);
@@ -134,7 +136,7 @@ Component *AddComponent(Entity *entity, const ComponentType type, void *data) {
     current->next = component;
   }
 
-  printf("Added component=[%i] to entity=[%i]\n", type, entity->id);
+  printf("Added component=[%i] to entity=[%lu]\n", type, entity->id);
   return component;
 }
 

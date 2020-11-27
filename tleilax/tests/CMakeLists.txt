@@ -10,6 +10,9 @@ target_link_libraries(test_cstatemachine C_StateMachine Unity)
 add_executable(test_ecs test_ecs.c "test_ecs.c")
 target_link_libraries(test_ecs ECS Unity)
 
+add_executable(test_starsystem test_starsystem.c "test_starsystem.c")
+target_link_libraries(test_starsystem ECS Unity galaxy starsystem)
+
 add_test(test_tleilax_all test_tleilax test_galaxy test_cstatemachine)
 
 add_custom_command(

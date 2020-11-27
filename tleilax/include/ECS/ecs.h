@@ -9,6 +9,12 @@ typedef enum COMPONENT_TYPE {
     POSITION,
     ROTATION,
     SCALE,
+    GRAVITY_CENTER,
+    STAR,
+    PLANET,
+    MOON,
+    SPACE_STATION,
+    ORBIT,
     MAX_COMPONENT_TYPES
 } ComponentType;
 
@@ -19,25 +25,27 @@ typedef struct component {
 } Component;
 
 typedef struct entity {
-    int id;
+    unsigned long id;
     Component *components;
     struct entity *next;
 } Entity;
 
 typedef struct world {
     Entity *entities;
-    int lastId;
+    unsigned long lastId;
 } World;
 
-World *CreateWorld();
+World *CreateWorld(void);
 
 void DestroyWorld(World *);
 
 void DestroyEntities(Entity *);
 
+void DestroyComponents(Component *component);
+
 Entity *AddEntity(World *);
 
-int RemoveEntity(World *, const int entityId);
+int RemoveEntity(World *, const unsigned long entityId);
 
 Component *AddComponent(Entity *entity, const ComponentType type, void *data);
 
