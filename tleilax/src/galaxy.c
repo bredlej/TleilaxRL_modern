@@ -63,48 +63,4 @@ static Star *CreateStar(const char *name, const float size,
   return newStar;
 }
 
-static Planet *CreatePlanet(const char *name, const enum PLANET_TYPE type,
-                     const float distanceFromStar) {
-  Planet *newPlanet = malloc(sizeof *newPlanet);
-  newPlanet->name = name;
-  newPlanet->type = type;
-  newPlanet->distanceFromStar = distanceFromStar;
-  newPlanet->next = NULL;
-
-  return newPlanet;
-}
-
-static StarSystem *CreateStarSystem(const Star *star, const Coordinates *coordinates) {
-  StarSystem *newStarSystem = malloc(sizeof(*newStarSystem));
-  newStarSystem->star = star;
-  newStarSystem->coordinates = coordinates;
-  newStarSystem->planets = NULL;
-
-  return newStarSystem;
-}
-
-static void DestroyPlanet(Planet *planet) {
-  printf("Destroying planet=[%s]\n", planet->name);
-  free(planet);
-}
-
-static void DestroyStarSystem(StarSystem *starSystem) {
-  Planet *planet = starSystem->planets;
-  while (planet) {
-    Planet *toDelete = planet;
-    planet = planet->next;
-    DestroyPlanet(toDelete);
-  }
-  assert(starSystem->star);
-  printf("Destroying Star=[%s]\n", starSystem->star->name);
-  free(starSystem->star);
-  starSystem->star = NULL;
-  printf("Destroying StarSystem\n");
-  free(starSystem);
-}
-
-struct Galaxy Galaxy = {.CreateStar = CreateStar,
-                        .CreatePlanet = CreatePlanet,
-                        .CreateStarSystem = CreateStarSystem,
-                        .DestroyPlanet = DestroyPlanet,
-                        .DestroyStarSystem = DestroyStarSystem};
+struct Galaxy Galaxy = {.CreateStar = CreateStar};

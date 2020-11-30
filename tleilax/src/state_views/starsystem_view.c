@@ -12,12 +12,10 @@ void UpdateStarSystemView()
 void RenderStarSystemView()
 {
   BeginDrawing();
+
   ClearBackground(BLACK);
-  TleilaxState *tleilaxUIState = TleilaxStateMachineObj.pInstance;
-  char starSystemName[20];
-  assert(tleilaxUIState->starSystem);
-  assert(tleilaxUIState->starSystem->star);
-  sprintf(starSystemName, "%s", tleilaxUIState->starSystem->star->name);
-  DrawText(starSystemName,100, 100, 50, RAYWHITE);
+  char coords[20];
+  sprintf(coords, "[%d, %d, %d]", Tleilax.selectedCoordinates->x, Tleilax.selectedCoordinates->y, Tleilax.selectedCoordinates->z);
+  DrawText(coords,100, 100, 50, RAYWHITE);
   EndDrawing();
 }

@@ -84,9 +84,9 @@ void DestroyComponents(Component *component) {
   Component *next;
   while (component) {
     next = component->next;
-    printf("Destroying component=[%i]\n", component->type);
+    //printf("Destroying component=[%i]\n", component->type);
     if (component->data) {
-      printf(" > Destroying component data\n", component->type);
+     // printf(" > Destroying component data\n", component->type);
       free(component->data);
     }
     free(component);
@@ -98,7 +98,7 @@ void DestroyEntities(Entity *entity) {
   Entity *next;
   while (entity) {
     next = entity->next;
-    printf("Destroying entity=[%lu]\n", entity->id);
+    //printf("Destroying entity=[%lu]\n", entity->id);
     DestroyComponents(entity->components);
     free(entity);
     entity = next;
@@ -108,7 +108,7 @@ void DestroyEntities(Entity *entity) {
 void DestroyWorld(World *world) {
   assert(world);
   DestroyEntities(world->entities);
-  printf("Destroying world\n");
+  //printf("Destroying world\n");
   free(world);
 }
 
@@ -136,7 +136,7 @@ Component *AddComponent(Entity *entity, const ComponentType type, void *data) {
     current->next = component;
   }
 
-  printf("Added component=[%i] to entity=[%lu]\n", type, entity->id);
+  //printf("Added component=[%i] to entity=[%lu]\n", type, entity->id);
   return component;
 }
 

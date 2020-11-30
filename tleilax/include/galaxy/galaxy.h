@@ -27,19 +27,6 @@ typedef struct Star {
   enum STAR_TYPE type;
 } Star;
 
-typedef struct Planet {
-  char *name;
-  enum PLANET_TYPE type;
-  float distanceFromStar;
-  struct Planet *next;
-} Planet;
-
-typedef struct StarSystem {
-  Coordinates *coordinates;
-  Star *star;
-  Planet *planets;
-} StarSystem;
-
 struct Galaxy {
   struct offset {
     float x;
@@ -47,11 +34,6 @@ struct Galaxy {
     float z;
   } offset;
   Star *(*CreateStar)(const char *, const float, const enum STAR_TYPE);
-  StarSystem *(*CreateStarSystem)(const Star *star, const Coordinates *coordinates);
-  Planet *(*CreatePlanet)(const char *name, const enum PLANET_TYPE type, const float distanceFromStar);
-
-  void (*DestroyStarSystem)(StarSystem *);
-  void (*DestroyPlanet)(Planet *);
 };
 
 extern struct Galaxy Galaxy;

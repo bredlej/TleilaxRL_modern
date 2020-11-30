@@ -25,10 +25,7 @@ Component *AddOrbit(Entity *entity, const unsigned long aroundEntityId,
 
 Component *AddStar(Entity *entity, const char *name, const int type) {
   if (entity) {
-    struct starData {
-      char *name;
-      int type;
-    } *pStarData = malloc(sizeof(*pStarData));
+    StarData *pStarData = malloc(sizeof(*pStarData));
 
     if (pStarData) {
       pStarData->name = name;
@@ -40,9 +37,7 @@ Component *AddStar(Entity *entity, const char *name, const int type) {
 
 Component *AddPlanet(Entity *entity, const char *name) {
   if (entity) {
-    struct planetData {
-      char *name;
-    } *pPlanetData = malloc(sizeof(*pPlanetData));
+    PlanetData *pPlanetData = malloc(sizeof(*pPlanetData));
     if (pPlanetData) {
       pPlanetData->name = name;
       return AddComponent(entity, PLANET, pPlanetData);
@@ -53,9 +48,7 @@ Component *AddPlanet(Entity *entity, const char *name) {
 
 Component *AddMoon(Entity *entity, const char *name) {
   if (entity) {
-    struct moonData {
-      char *name;
-    } *pMoonData = malloc(sizeof(*pMoonData));
+    MoonData *pMoonData = malloc(sizeof(*pMoonData));
     if (pMoonData) {
       pMoonData->name = name;
       return AddComponent(entity, MOON, pMoonData);
@@ -66,9 +59,7 @@ Component *AddMoon(Entity *entity, const char *name) {
 
 Component *AddSpaceStation(Entity *entity, const char *name) {
   if (entity) {
-    struct spaceStationData {
-      char *name
-    } *pSpaceStationData = malloc(sizeof(*pSpaceStationData));
+    SpaceStationData *pSpaceStationData = malloc(sizeof(*pSpaceStationData));
     if (pSpaceStationData) {
       pSpaceStationData->name = name;
       return AddComponent(entity, SPACE_STATION, pSpaceStationData);
@@ -76,4 +67,3 @@ Component *AddSpaceStation(Entity *entity, const char *name) {
   }
   return NULL;
 }
-

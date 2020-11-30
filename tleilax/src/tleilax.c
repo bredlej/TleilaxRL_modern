@@ -39,6 +39,19 @@ struct Star *StarAt(uint32_t x, uint32_t y, uint32_t z) {
     return NULL;
 }
 
+World *StarSystemAt(uint32_t x, uint32_t y, uint32_t z) {
+  World *starSystem = NULL;
+  Star *star = StarAt(x, y, z);
+  if (star) {
+    starSystem = malloc(sizeof(*starSystem));
+    if (starSystem) {
+      AddEntity(starSystem);
+      AddGravityCenter(starSystem);
+    }
+  }
+  return starSystem;
+}
+
 void init() {
   struct TleilaxConfig tleilaxConfig = {.zoomSpeed = 2.0f, .scrollSpeed = 1.0f};
   Tleilax.config = tleilaxConfig;
@@ -78,7 +91,7 @@ EVENT_DEFINE(TLX_ShowIntro, NoEventData)
       END_TRANSITION_MAP(TleilaxState, pEventData)
     }
 
-EVENT_DEFINE(TLX_ShowStarSystem, StarSystemData)
+EVENT_DEFINE(TLX_ShowStarSystem, Coordinates)
     {
       BEGIN_TRANSITION_MAP
         TRANSITION_MAP_ENTRY(CANNOT_HAPPEN) // ST_Intro
@@ -89,21 +102,18 @@ EVENT_DEFINE(TLX_ShowStarSystem, StarSystemData)
 
 STATE_DEFINE(Intro, NoEventData) {
   TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
-  tleilaxUi->starSystem = NULL;
+  tleilaxUi->coordinates = NULL;
   printf("Running Intro state.\n");
 }
 
 STATE_DEFINE(GalaxyView, NoEventData) {
   TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
-  if (tleilaxUi->starSystem) {
-    Galaxy.DestroyStarSystem(tleilaxUi->starSystem);
-  }
+
   printf("Running GalaxyView state.\n");
 }
 
 STATE_DEFINE(StarSystemView, NoEventData) {
-  ASSERT_TRUE(pEventData);
-
+  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
   printf("Running StarSystemView state.\n");
 }
 
@@ -112,17 +122,13 @@ GUARD_DEFINE(StarSystemView, NoEventData) {
   return Tleilax.selectedCoordinates != NULL && Tleilax.selectedStar != NULL;
 }
 
-ENTRY_DEFINE(StarSystemView, StarSystemData) {
+ENTRY_DEFINE(StarSystemView, Coordinates) {
   printf("ENTRY StarSystemView\n");
-  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
-  tleilaxUi->starSystem = pEventData->starSystem;
+  if (pEventData) {
+    printf("Got coordinates=[%d, %d, %d]\n", pEventData->x, pEventData->y, pEventData->z);
+  }
 }
 
 EXIT_DEFINE(StarSystemView) {
   printf("EXIT StarSystemView\n");
-  TleilaxState *tleilaxUi = SM_GetInstance(TleilaxState);
-  assert(tleilaxUi->starSystem);
-  Galaxy.DestroyStarSystem(tleilaxUi->starSystem);
-  tleilaxUi->starSystem = NULL;
-  Tleilax.selectedStar = NULL;
 }

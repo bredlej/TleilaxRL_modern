@@ -33,7 +33,7 @@ target_include_directories(graphics PUBLIC ../include)
 
 
 add_library(tleilax_library tleilax.c ${HEADER_LIST})
-target_link_libraries(tleilax_library random galaxy C_StateMachine graphics)
+target_link_libraries(tleilax_library random galaxy starsystem C_StateMachine graphics)
 target_include_directories(tleilax_library PRIVATE
         ${PROJECT_SOURCE_DIR}/include
         $<TARGET_PROPERTY:C_StateMachine,INCLUDE_DIRECTORIES>
