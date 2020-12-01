@@ -128,6 +128,7 @@ Component *AddComponent(Entity *entity, const ComponentType type, void *data) {
   } else {
     Component *current = entity->components;
     if (current->type == type) {
+      free(component);
       return NULL;
     }
     while (current->next != NULL) {

@@ -130,7 +130,7 @@ GravityCenterTree *CreateEntityTree(const World *world) {
     pEntity = pEntity->next;
   }
 
-  GravityCenterTree *gravityCenterTree = malloc(sizeof(gravityCenterTree));
+  GravityCenterTree *gravityCenterTree = malloc(sizeof(*gravityCenterTree));
 
   printf("          -> gravityCenterTree:133 malloc(%p)\n", gravityCenterTree);
   if (gravityCenterTree) {
@@ -173,6 +173,7 @@ void DestroyGravityCenterTree(GravityCenterTree *gravityCenterTree) {
         free(gravityCenterTree->gravityCenters[i]);
       }
     }
+    free(gravityCenterTree->gravityCenters);
     printf("          -> gravityCenterTree->indexes free(%p)\n", gravityCenterTree->indexes);
     free(gravityCenterTree->indexes);
     printf("          -> gravityCenterTree free(%p)\n", gravityCenterTree);

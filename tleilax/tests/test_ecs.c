@@ -4,6 +4,7 @@
 
 #include <ECS/ecs.h>
 #include <unity.h>
+#include <stdlib.h>
 
 void setUp(void) {}
 
@@ -88,10 +89,10 @@ static void test_Should_Add_Component_To_Entity() {
   struct position {
     int x;
     int y;
-  } position;
-  position.x = 1;
-  position.y = 2;
-  AddComponent(entity, POSITION, &position);
+  } *position = malloc(sizeof(*position));
+  position->x = 1;
+  position->y = 2;
+  AddComponent(entity, POSITION, position);
 
   TEST_ASSERT_NOT_NULL(world->entities->components);
   TEST_ASSERT_NULL(world->entities->components->next);
@@ -109,10 +110,17 @@ static void test_Should_Add_Only_One_Component_Of_Given_Type() {
     int x;
     int y;
   };
-  struct position position1 = {1, 2};
-  struct position position2 = {3, 4};
-  AddComponent(entity, POSITION, &position1);
-  AddComponent(entity, POSITION, &position2);
+  struct position *position1 = malloc (sizeof(*position1));
+  position1->x = 1;
+  position1->y = 2;
+  struct position *position2 = malloc (sizeof(*position1));
+  position2->x = 3;
+  position2->y = 4;
+  AddComponent(entity, POSITION, position1);
+  Component *invalidComponent = AddComponent(entity, POSITION, position2);
+  if (!invalidComponent) {
+    free(position2);
+  }
   TEST_ASSERT_NOT_NULL(world->entities->components);
   TEST_ASSERT_NULL(world->entities->components->next);
   TEST_ASSERT_EQUAL(POSITION, world->entities->components->type);
@@ -128,17 +136,18 @@ static void test_Should_Add_Two_Components_To_Entity() {
   struct position {
     int x;
     int y;
-  } position;
+  } *position = malloc(sizeof(*position));
+
   struct rotation {
     float degrees;
-  } rotation;
+  } *rotation = malloc(sizeof(*rotation));
 
-  position.x = 1;
-  position.y = 2;
-  rotation.degrees = 30.0f;
+  position->x = 1;
+  position->y = 2;
+  rotation->degrees = 30.0f;
 
-  Component *positionComponent = AddComponent(entity, POSITION, &position);
-  Component *rotationComponent = AddComponent(entity, ROTATION, &rotation);
+  Component *positionComponent = AddComponent(entity, POSITION, position);
+  Component *rotationComponent = AddComponent(entity, ROTATION, rotation);
 
   TEST_ASSERT_EQUAL(positionComponent, world->entities->components);
   TEST_ASSERT_EQUAL(rotationComponent, world->entities->components->next);
@@ -213,10 +222,13 @@ static void test_Should_Change_Component_Value() {
   struct position {
     int x;
     int y;
-  } position = {0, 0};
+  } *position = malloc(sizeof(*position));
+  position->x = 0;
+  position->y = 0;
+
   World *world = CreateWorld();
   Entity *entity = AddEntity(world);
-  AddComponent(entity, POSITION, &position);
+  AddComponent(entity, POSITION, position);
   struct position *positionComponentData = entity->components->data;
   TEST_ASSERT_EQUAL(0, positionComponentData->x);
   TEST_ASSERT_EQUAL(0, positionComponentData->y);
