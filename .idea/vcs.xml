@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tleilax/cmake-build-debug-win10/_deps/raylib-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tleilax/out/build/Tleilax-Debug/_deps/raylib-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tleilax/out/build/x64-Clang-Release/_deps/raylib-src" vcs="Git" />
   </component>
 </project>

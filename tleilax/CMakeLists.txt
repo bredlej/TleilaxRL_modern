@@ -8,6 +8,7 @@ project(
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "-Wall -Wno-error")
+set(ENABLE_GRAPHICS 0)
 
 enable_testing()
 
