@@ -1,6 +1,6 @@
 #include <galaxy/galaxy.h>
 
-static struct StarNames *LoadNames(char *fileName) {
+struct StarNames *LoadNames(char *fileName) {
   FILE *file = fopen(fileName, "r");
   int error;
 
