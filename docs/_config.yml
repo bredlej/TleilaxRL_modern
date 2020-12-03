@@ -21,12 +21,12 @@
 title: TleilaxRL Blog
 email: patryk.szczypien@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  TleilaxRL blog
-  #baseurl: "" # the subpath of your site, e.g. /blog
-  #url: "" # the base hostname & protocol for your site, e.g. http://example.com
+  Thoughts about development of TleilaxRL
+#baseurl: "" # the subpath of your site, e.g. /blog
+#url: "" # the base hostname & protocol for your site, e.g. http://example.com
 baseurl: "/TleilaxRL_modern" # the subpath of your site, e.g. /blog
 url: "https://bredlej.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
+twitter_username: bredlej
 github_username:  bredlej
 
 # Build settings
