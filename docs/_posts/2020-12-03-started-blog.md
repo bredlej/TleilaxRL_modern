@@ -2,7 +2,6 @@
 layout: post
 title:  "Started a project blog!"
 date: 2020-12-03 11:04:00 -0000
-categories: about
 ---
 
 #Welcome
