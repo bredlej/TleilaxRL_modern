@@ -1,5 +1,5 @@
 add_executable(test_tleilax test_tleilax.c "test_tleilax.c")
-target_link_libraries(test_tleilax tleilax_library Unity)
+target_link_libraries(test_tleilax tleilax_library Unity C_StateMachine)
 
 add_executable(test_galaxy test_galaxy.c "test_galaxy.c")
 target_link_libraries(test_galaxy galaxy Unity)

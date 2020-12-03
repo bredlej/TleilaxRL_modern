@@ -44,8 +44,8 @@ struct StarNames *LoadNames(char *fileName) {
         ;
 
       names[i][j + 1] = '\0';
-      starNames->size = i;
     }
+    starNames->size = i;
     starNames->names = names;
     fclose(file);
   }

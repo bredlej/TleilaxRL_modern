@@ -35,7 +35,6 @@ void createWorldAndEntities() {
   moon = AddEntity(starSystem);
   spaceStation2 = AddEntity(starSystem);
   planet3 = AddEntity(starSystem);
-
 }
 
 void addComponents(void) {

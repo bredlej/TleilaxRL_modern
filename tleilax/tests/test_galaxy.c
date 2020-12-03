@@ -18,6 +18,10 @@ static void test_Should_Load_Star_Names()
     struct StarNames *starNames = LoadNames("scripts/lua/old/names/greek");
     TEST_ASSERT_TRUE(starNames->size != 0);
     TEST_ASSERT_EQUAL_STRING("Acantha", starNames->names[0]);
+    uint32_t i = 0;
+    for (i; i< starNames->size; i++) {
+      free(starNames->names[i]);
+    }
     free(starNames->names);
     free(starNames);
 }
