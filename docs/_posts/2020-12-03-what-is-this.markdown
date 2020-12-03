@@ -27,7 +27,7 @@ One Lone Coders [video about procedural generation](https://www.youtube.com/watc
 
 I started the first project with ASCII chars in Ncurses and it looks like this:
 
-![TleilaxRL screenshot]({{ site.url }}/assets/tleilaxrl.gif)
+![TleilaxRL screenshot]({{ site.url }}/{{ site.baseurl }}//assets/tleilaxrl.gif)
 
 I think it's pretty cool for a proof of concept, but there are some issues with it where I decided to start it new:
 
@@ -48,7 +48,7 @@ worry anymore about memory allocation and things like that.
 
 The result of this is the projects language statistics:
 
-![TleilaxRL languages]({{ site.url }}/assets/tleilaxrl_languages.png)
+![TleilaxRL languages]({{ site.url }}/{{ site.baseurl }}//assets/tleilaxrl_languages.png)
 
 I wanted to learn C and not Lua, and I had plans to rewrite everything in the former but they never came to be.
 
@@ -112,7 +112,7 @@ So those are four main reasons for me to have started a new fresh project.
 
 ## The current state
 
-![TleilaxRL_modern]({{ site.url }}/assets/tleilaxrl_modern.gif)
+![TleilaxRL_modern]({{ site.url }}/{{ site.baseurl }}/assets/tleilaxrl_modern.gif)
 
 The first commit of **TleilaxRL_modern** to my GitHub repository was in the 24th October 2020 (my birthday!).
 

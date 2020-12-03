@@ -8,7 +8,7 @@ project(
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "-Wall -Wno-error")
-set(ENABLE_GRAPHICS 0)
+set(ENABLE_GRAPHICS 1)
 
 enable_testing()
 
@@ -18,3 +18,4 @@ add_subdirectory(apps)
 add_subdirectory(tests)
 
 #include_directories(${SDL2_INCLUDE_DIRS})
+
