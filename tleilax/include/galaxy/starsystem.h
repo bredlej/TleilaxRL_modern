@@ -53,6 +53,20 @@ Component *AddPlanet(Entity *entity, const char *name);
 Component *AddMoon(Entity *entity, const char *name);
 Component *AddSpaceStation(Entity *entity, const char *name);
 
+/**
+ * Helper function for obtaining the index of a given entity in the array of
+ * GravityCenterNodes.
+ *
+ * @param entityId Id of the entity associated with the node. Should have a
+ * GRAVITY_CENTER component attached
+ * @param gravityCenterTree reference to a the struct where the array is stored
+ * @returns index of node in table or NULL if not present
+ */
+static uint32_t
+getIndexOfGravityCenter(const unsigned long entityId,
+                        const int *indexes, int amountOfEntries);
+GravityCenterNode *renderNodeTree(GravityCenterNode *rootNode,
+                                  const GravityCenterTree *gravityCenterTree);
 GravityCenterTree *CreateEntityTree(const World *world);
 void DestroyGravityCenterTree(GravityCenterTree *gravityCenterTree);
 

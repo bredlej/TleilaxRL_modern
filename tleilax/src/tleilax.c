@@ -40,15 +40,61 @@ struct Star *StarAt(uint32_t x, uint32_t y, uint32_t z) {
 }
 
 World *StarSystemAt(uint32_t x, uint32_t y, uint32_t z) {
-  World *starSystem = NULL;
   Star *star = StarAt(x, y, z);
+  World *starSystem = NULL;
   if (star) {
-    starSystem = malloc(sizeof(*starSystem));
+    starSystem = CreateWorld();
+    printf("-------------------------------------------\n");
+    printf("   Creating StarSystem at [%d, %d, %d]\n", x, y, z);
     if (starSystem) {
-      AddEntity(starSystem);
-      AddGravityCenter(starSystem);
+      Entity *starEntity = AddEntity(starSystem);
+      starEntity->components = NULL;
+      AddStar(starEntity, star->name, star->type);
+      AddGravityCenter(starEntity);
+      printf("   Creating Star [%s]\n", star->name);
+      uint32_t planetAmount = Random.RndIntRange(0, 18);
+      printf("   Generating [%d] planets...\n", planetAmount);
+      uint32_t i = 0;
+      for (; i < planetAmount; i++) {
+        Entity *planet = AddEntity(starSystem);
+        char *planetName;
+        if (Random.RndIntRange(0, 10) < 5) {
+          planetName =
+              Tleilax.starNames[GREEK]
+                  ->names[Random.RndIntRange(0, Tleilax.starNames[GREEK]->size)];
+        } else {
+          planetName =
+              Tleilax.starNames[INDIAN]
+                  ->names[Random.RndIntRange(0, Tleilax.starNames[INDIAN]->size)];
+        }
+        AddPlanet(planet, planetName);
+        AddOrbit(planet, starEntity->id, i + (i * 1.8), Random.RndDoubleRange(0.0f, 360.0f));
+        printf("   Creating Planet [%s id=%d]\n", planetName, planet->id);
+        uint8_t planetHasOrbitalBodies = Random.RndIntRange(0,100) < 20;
+        if (planetHasOrbitalBodies) {
+          AddGravityCenter(planet);
+          if (Random.RndIntRange(0, 100) < 50) {
+            Entity *moon = AddEntity(starSystem);
+            char *moonName=  Tleilax.starNames[INDIAN]
+                ->names[Random.RndIntRange(0, Tleilax.starNames[INDIAN]->size)];
+            AddMoon(planet, moonName);
+            AddOrbit(moon, planet->id, 0.05f, Random.RndDoubleRange(0.0f, 360.0f));
+            printf("   >  Creating Moon [%s id=%d]\n", moonName, moon->id);
+          }
+          else {
+            Entity *spaceStation = AddEntity(starSystem);
+            char *spaceStationName = Tleilax.starNames[INDIAN]
+                ->names[Random.RndIntRange(0, Tleilax.starNames[INDIAN]->size)];
+            AddSpaceStation(spaceStation, spaceStationName);
+            AddOrbit(spaceStation, planet->id, 0.05f, Random.RndDoubleRange(0.0f, 360.0f));
+            printf("   >  Creating Space Station [%s id=%d]\n", spaceStationName, spaceStation->id);
+          }
+        }
+      }
+      printf("-------------------------------------------\n");
     }
   }
+
   return starSystem;
 }
 
@@ -60,6 +106,8 @@ void init() {
     Tleilax.starNames[GREEK] = LoadNames("scripts/lua/old/names/greek");
     Tleilax.starNames[INDIAN] = LoadNames("scripts/lua/old/names/indian");
   }
+  Tleilax.starSystem = NULL;
+  Tleilax.gravityCenterTree = NULL;
   Galaxy.offset.x = 0.0f;
   Galaxy.offset.y = 0.0f;
   Galaxy.offset.z = 0.0f;
@@ -126,9 +174,16 @@ ENTRY_DEFINE(StarSystemView, Coordinates) {
   printf("ENTRY StarSystemView\n");
   if (pEventData) {
     printf("Got coordinates=[%d, %d, %d]\n", pEventData->x, pEventData->y, pEventData->z);
+    Tleilax.starSystem = StarSystemAt(pEventData->x, pEventData->y, pEventData->z);
+    Tleilax.gravityCenterTree = CreateEntityTree(Tleilax.starSystem);
+
   }
 }
 
 EXIT_DEFINE(StarSystemView) {
   printf("EXIT StarSystemView\n");
+  DestroyGravityCenterTree(Tleilax.gravityCenterTree);
+  DestroyWorld(Tleilax.starSystem);
+  Tleilax.gravityCenterTree = NULL;
+  Tleilax.starSystem = NULL;
 }

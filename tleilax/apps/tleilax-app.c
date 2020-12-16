@@ -3,6 +3,8 @@
 int main(int argc, char *argv[]) {
   print_version();
 
+  setvbuf(stdout, NULL, _IONBF, 0);
+
   const int screenWidth = 960;
   const int screenHeight = 640;
 

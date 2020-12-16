@@ -3,19 +3,6 @@
 //
 #include <galaxy/starsystem.h>
 
-/**
- * Helper function for obtaining the index of a given entity in the array of
- * GravityCenterNodes.
- *
- * @param entityId Id of the entity associated with the node. Should have a
- * GRAVITY_CENTER component attached
- * @param gravityCenterTree reference to a the struct where the array is stored
- * @returns index of node in table or NULL if not present
- */
-static uint32_t
-getIndexOfGravityCenter(const unsigned long entityId,
-                        const int *indexes, int amountOfEntries);
-
 uint32_t getIndexOfGravityCenter(const unsigned long entityId,
                                  const int *indexes, const int amountOfEntries) {
   uint32_t index = NULL;
@@ -53,17 +40,16 @@ GravityCenterTree *CreateEntityTree(const World *world) {
         sizeOfOrbitTable = 2 * sizeOfOrbitTable;
         gravityCenterNodes = realloc(
             gravityCenterNodes, sizeOfOrbitTable * sizeof(GravityCenterNode));
-        indexes = realloc(indexes, sizeof(int));
-        printf("          -> indexes realloc(%p)\n", indexes);
+        indexes = realloc(indexes, sizeof(int) * sizeOfOrbitTable);
       }
       GravityCenterNode *gravityCenterNode = malloc(sizeof(*gravityCenterNode));
-      printf("          -> gravityCenterNode:59 malloc(%p)\n", gravityCenterNode);
       if (gravityCenterNode) {
         gravityCenterNode->entity = pEntity;
         gravityCenterNode->children = NULL;
         gravityCenterNode->size = 0;
         gravityCenterNode->amountChildren = 0;
 
+        printf("----   GravityCenterNode=[%p] with Entity=[%d] at index=[%d]\n", gravityCenterNode, pEntity->id, gravityCenterIndex);
         gravityCenterNodes[gravityCenterIndex] = gravityCenterNode;
         indexes[gravityCenterIndex] = pEntity->id;
 
@@ -90,9 +76,9 @@ GravityCenterTree *CreateEntityTree(const World *world) {
             parentNode->size = 1;
             parentNode->amountChildren = 1;
             parentNode->children = malloc(sizeof(parentNode->children));
-            printf("          -> parentNode->children:92 malloc(%p)\n", parentNode->children);
+
             GravityCenterNode *childNode = malloc(sizeof(*childNode));
-            printf("          -> childNode:94 malloc(%p)\n", childNode);
+
             if (childNode) {
               childNode->entity = pEntity;
               childNode->children = NULL;
@@ -132,7 +118,7 @@ GravityCenterTree *CreateEntityTree(const World *world) {
 
   GravityCenterTree *gravityCenterTree = malloc(sizeof(*gravityCenterTree));
 
-  printf("          -> gravityCenterTree:133 malloc(%p)\n", gravityCenterTree);
+  //printf("          -> gravityCenterTree:133 malloc(%p)\n", gravityCenterTree);
   if (gravityCenterTree) {
     gravityCenterTree->gravityCenters = gravityCenterNodes;
     gravityCenterTree->size = sizeOfOrbitTable;

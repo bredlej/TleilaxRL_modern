@@ -26,7 +26,7 @@ Entity *AddEntity(World *world) {
     }
     current->next = nextEntity;
   }
-  printf("Added entity=[%lu]\n", nextEntity->id);
+  //printf("Added entity=[%lu]\n", nextEntity->id);
   return nextEntity;
 }
 

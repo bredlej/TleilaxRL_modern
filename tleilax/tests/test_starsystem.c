@@ -7,10 +7,8 @@
 #include <unity.h>
 
 static World *starSystem;
-static Entity *gravityCenterOfStar;
 static Entity *star;
 static Entity *planet1;
-static Entity *gravityCenterOfPlanet2;
 static Entity *planet2;
 static Entity *moon;
 static Entity *spaceStation1;
@@ -79,6 +77,7 @@ void test_Entities_Should_Be_In_Order(void) {
 void testEntityRenderAsNodes(void) {
   setvbuf(stdout, NULL, _IONBF, 0);
   GravityCenterTree *gravityCenterTree = CreateEntityTree(starSystem);
+  renderNodeTree(gravityCenterTree->gravityCenters[0], gravityCenterTree);
   DestroyGravityCenterTree(gravityCenterTree);
 
   TEST_PASS();

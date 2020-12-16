@@ -28,8 +28,12 @@ if (${ENABLE_GRAPHICS})
     target_link_libraries(galaxy_view raylib)
     target_include_directories(galaxy_view PUBLIC ../include)
 
+    add_library(starsystem_view state_views/starsystem_view.c "${Tleilax_SOURCE_DIR}/include/tleilax/views/starsystem_view.h")
+    target_link_libraries(starsystem_view raylib starsystem)
+    target_include_directories(starsystem_view PUBLIC ../include)
+
     add_library(graphics graphics.c "${Tleilax_SOURCE_DIR}/include/tleilax/graphics.h")
-    target_link_libraries(graphics raylib galaxy_view)
+    target_link_libraries(graphics raylib galaxy_view starsystem_view)
     target_include_directories(graphics PUBLIC ../include)
 endif ()
 

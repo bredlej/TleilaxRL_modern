@@ -34,6 +34,9 @@ struct Tleilax {
   struct StarNames **starNames;
   Coordinates *selectedCoordinates;
   struct Star *selectedStar;
+
+  World *starSystem;
+  GravityCenterTree *gravityCenterTree;
 };
 extern struct Tleilax Tleilax;
 

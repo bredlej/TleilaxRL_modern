@@ -23,6 +23,7 @@ void Initialize(const int width, const int height) {
   GalaxyView.horizontalDistance = GalaxyView.cameraDistance * cosf(GalaxyView.verticalAngle * PI / 180.0f);
   GalaxyView.TleilaxStateMachineObj = &TleilaxStateMachineObj;
   GalaxyView.Init();
+  StarSystemView.Init();
 
   SetTargetFPS(60);
 }
@@ -37,7 +38,8 @@ void Update() {
     GalaxyView.Update();
     break;
   case ST_STARSYSTEM_VIEW:
-    UpdateStarSystemView();
+    //UpdateStarSystemView();
+    StarSystemView.Update();
     break;
   default:
     break;
@@ -53,7 +55,8 @@ void Render() {
     GalaxyView.Render();
     break;
   case ST_STARSYSTEM_VIEW:
-    RenderStarSystemView();
+    //RenderStarSystemView();
+    StarSystemView.Render();
     break;
   default:
     break;
