@@ -11,6 +11,7 @@ void UpdateIntro() {
 void RenderIntro() {
   BeginDrawing();
   ClearBackground(BLACK);
-  DrawText("Tleilax", 100, 100, 50, RAYWHITE);
+  DrawText("T L E I L A X", 120, 180, 100, RAYWHITE);
+  DrawText("Press <Tab>", 30, 580, 30, RAYWHITE);
   EndDrawing();
 }

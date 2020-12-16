@@ -172,13 +172,15 @@ void RenderStarSystemView() {
   Vector3 cameraPos = {0, 15, 30};
   StarSystemView.camera.position = cameraPos;
   UpdateCamera(&StarSystemView.camera);
+  rlLoadIdentity();
   BeginDrawing();
 
   ClearBackground(BLACK);
   char coords[20];
   sprintf(coords, "[%d, %d, %d]", Tleilax.selectedCoordinates->x,
           Tleilax.selectedCoordinates->y, Tleilax.selectedCoordinates->z);
-  DrawText(coords, 100, 100, 50, RAYWHITE);
+  DrawText(coords, 300, 50, 50, RAYWHITE);
+  DrawText("Press <Tab> to go back", 30, 580, 30, RAYWHITE);
   GravityCenterTree *gravityCenterTree = Tleilax.gravityCenterTree;
 
   BeginMode3D(StarSystemView.camera);

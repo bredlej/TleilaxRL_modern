@@ -62,6 +62,9 @@ void RenderWorld(Vector3 *cameraInitialPosition, Camera *camera,
   sprintf(galaxy_offset, "Galaxy Offset = [%d, %d, %d]", (int)Galaxy.offset.x,
           (int)Galaxy.offset.y, (int)Galaxy.offset.z);
   DrawText(galaxy_offset, 200, 10, 30, RAYWHITE);
+  DrawText("W S A D", 30, 530, 30, RAYWHITE);
+  DrawText("Arrow keys, + & -", 30, 560, 30, RAYWHITE);
+  DrawText("Click on a star and press enter", 30, 590, 30, RAYWHITE);
   DrawFPS(10, 10);
 
   EndDrawing();
