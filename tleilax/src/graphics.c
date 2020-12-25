@@ -25,6 +25,9 @@ void Initialize(const int width, const int height) {
   GalaxyView.Init();
   StarSystemView.Init();
 
+  Graphics.framebuffer = LoadRenderTexture(width, height);
+  Graphics.fbPostProcessingShader = LoadShader(0, "assets/shaders/tleilax_postprocessing.frag");
+  Graphics.u_timeLoc = GetShaderLocation(Graphics.fbPostProcessingShader, "time");
   SetTargetFPS(60);
 }
 
@@ -47,6 +50,9 @@ void Update() {
 }
 
 void Render() {
+  Graphics.elapsedTime += GetFrameTime();
+  SetShaderValue(Graphics.fbPostProcessingShader, Graphics.u_timeLoc, &Graphics.elapsedTime, UNIFORM_FLOAT);
+  BeginTextureMode(Graphics.framebuffer);
   switch (TleilaxStateMachineObj.currentState) {
   case ST_INTRO:
     RenderIntro();
@@ -61,10 +67,17 @@ void Render() {
   default:
     break;
   }
+  EndTextureMode();
+  ClearBackground(BLACK);
+  BeginShaderMode(Graphics.fbPostProcessingShader);
+  DrawTextureRec(Graphics.framebuffer.texture, (Rectangle){ 0, 0, Graphics.framebuffer.texture.width, -Graphics.framebuffer.texture.height }, (Vector2){ 0, 0 }, WHITE);
+  EndShaderMode();
 }
 
 void Destroy() {
   Tleilax.Destroy();
+  UnloadRenderTexture(Graphics.framebuffer);
+  UnloadShader(Graphics.fbPostProcessingShader);
   CloseWindow();
 }
 

@@ -99,6 +99,7 @@ World *StarSystemAt(uint32_t x, uint32_t y, uint32_t z) {
 }
 
 void init() {
+
   struct TleilaxConfig tleilaxConfig = {.zoomSpeed = 2.0f, .scrollSpeed = 1.0f};
   Tleilax.config = tleilaxConfig;
   Tleilax.starNames = malloc(sizeof(struct StarNames *) * 2);

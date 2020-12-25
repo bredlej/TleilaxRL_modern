@@ -48,13 +48,14 @@ Camera InitializeCamera(Vector3 *cameraInitialPosition, float cameraDistance,
 
 void RenderWorld(Vector3 *cameraInitialPosition, Camera *camera,
                  float *distance) {
+
   BeginDrawing();
 
   ClearBackground(BLACK);
   BeginMode3D((*camera));
 
   DrawGalaxy(camera, cameraInitialPosition, distance);
-  DrawGrid(50, 1.0f);
+  //DrawGrid(50, 1.0f);
 
   EndMode3D();
 
@@ -62,9 +63,9 @@ void RenderWorld(Vector3 *cameraInitialPosition, Camera *camera,
   sprintf(galaxy_offset, "Galaxy Offset = [%d, %d, %d]", (int)Galaxy.offset.x,
           (int)Galaxy.offset.y, (int)Galaxy.offset.z);
   DrawText(galaxy_offset, 200, 10, 30, RAYWHITE);
-  DrawText("W S A D", 30, 530, 30, RAYWHITE);
-  DrawText("Arrow keys, + & -", 30, 560, 30, RAYWHITE);
-  DrawText("Click on a star and press enter", 30, 590, 30, RAYWHITE);
+  DrawText("W S A D", 30, 1030, 30, RAYWHITE);
+  DrawText("Arrow keys, + & -", 30, 1060, 30, RAYWHITE);
+  DrawText("Click on a star and press enter", 30, 1090, 30, RAYWHITE);
   DrawFPS(10, 10);
 
   EndDrawing();
@@ -113,6 +114,7 @@ void DrawGalaxy(Camera *camera, Vector3 *cameraInitialPosition,
 
             EndMode3D();
             char textAboveStar[20];
+
             PrepareStarDescription(coords, starInSectorXYZ, textAboveStar);
             DescribeStar(camera, &starPositionInWorldCoords, textAboveStar);
             BeginMode3D((*camera));
@@ -230,20 +232,27 @@ Camera AdjustCameraOnUserInput(Camera *camera, float *distance,
 }
 
 void RenderStar(const struct Star *star, Vector3 *starPositionInWorldCoords) {
+  BeginShaderMode(GalaxyView.shader);
   switch (star->type) {
   case STAR_YELLOW:
-    DrawSphere((*starPositionInWorldCoords), star->size, YELLOW);
+    //DrawSphere((*starPositionInWorldCoords), star->size, YELLOW);
+    DrawModel(GalaxyView.starModel, (*starPositionInWorldCoords), star->size, YELLOW);
     break;
   case STAR_RED:
-    DrawSphere((*starPositionInWorldCoords), star->size, RED);
+    //DrawSphere((*starPositionInWorldCoords), star->size, RED);
+    DrawModel(GalaxyView.starModel, (*starPositionInWorldCoords), star->size, RED);
     break;
   case STAR_BLUE:
-    DrawSphere((*starPositionInWorldCoords), star->size, DARKBLUE);
+    //DrawSphere((*starPositionInWorldCoords), star->size, DARKBLUE);
+    DrawModel(GalaxyView.starModel, (*starPositionInWorldCoords), star->size, BLUE);
     break;
   case STAR_BROWN:
-    DrawSphere((*starPositionInWorldCoords), star->size, BROWN);
+    //DrawSphere((*starPositionInWorldCoords), star->size, BROWN);
+    DrawModel(GalaxyView.starModel, (*starPositionInWorldCoords), star->size, BROWN);
     break;
   }
+  EndShaderMode();
+
 }
 
 void DescribeStar(Camera *camera, Vector3 *starPositionInWorldCoords,
@@ -280,6 +289,14 @@ void RenderGalaxyView() {
 }
 
 void InitGraphics() {
+
+  GalaxyView.starTexture = LoadTexture("assets/textures/sun.png");
+  GalaxyView.starModel = LoadModelFromMesh(GenMeshSphere(1.0f, 32, 32));
+  GalaxyView.starModel.materials[0].maps[MAP_DIFFUSE].texture = GalaxyView.starTexture;
+  GalaxyView.starModel.materials[0].maps[MAP_IRRADIANCE].texture = GalaxyView.starTexture;
+ // GalaxyView.starModel.materials[0].shader = LoadShader(0, TextFormat("assets/shaders/bloom.fs"));
+
+  //GalaxyView.shader = LoadShader(0, TextFormat("assets/shaders/dream_vision.fs"));
   Vector3 cameraInitialPosition = {0.0f, 0.0f, 0.0f};
   GalaxyView.camera =
       InitializeCamera(&cameraInitialPosition, GalaxyView.cameraDistance,

@@ -62,14 +62,15 @@ void renderNode(GravityCenterNode *pNode) {
       PlanetData *planetData = planet->data;
       Vector3 vec = {0.0, 0.0, 0.0};
       DrawSphere(vec, 0.5f, RED);
-
       /*
+      Vector2 screenCoords = GetWorldToScreen(vec, StarSystemView.camera);
+      Matrix m = GetMatrixProjection();
       EndMode3D();
+
       BeginMode3D(StarSystemView.camera);
+      SetMatrixProjection(m);
       */
     }
-
-
 
     Component *moon = GetComponent(entity, MOON);
     if (moon) {
@@ -85,9 +86,9 @@ void renderNode(GravityCenterNode *pNode) {
       SpaceStationData *spaceStationData = spaceStation->data;
       Vector3 vec = {0.0, 0.0, 0.0};
       DrawSphere(vec, 0.2f, ORANGE);
-
     }
   }
+
 }
 void pushOrbit(const Entity *entity) {
   Component *orbit = GetComponent(entity, ORBIT);
@@ -139,7 +140,51 @@ renderStarSystem(GravityCenterNode *rootNode,
                              gravityCenterTree->amountOfGravityCenters)],
                          gravityCenterTree);
         rlPopMatrix();
+      } else {
+        renderStarSystem(childNode, gravityCenterTree);
+      }
+    }
+  }
+  rlPopMatrix();
+}
 
+GravityCenterNode *
+renderStarSystemNew(GravityCenterNode *rootNode,
+                 const GravityCenterTree *gravityCenterTree) {
+  rlPushMatrix();
+  Component *orbit = GetComponent(rootNode->entity, ORBIT);
+  if (orbit) {
+    struct orbitData *orbitData = orbit->data;
+    if (orbitData) {
+      Vector3 vec = {0.0, 0.0, 0.0};
+      Vector3 rot = {1.0f, 0.0f, 0.0f};
+      DrawCircle3D(vec, orbitData->distance, rot, 90, RAYWHITE);
+      rlRotatef(orbitData->degrees, 0.0f, 1.0f, 0.0f);
+      rlTranslatef(orbitData->distance, 0.0f, 0.0f);
+    }
+  }
+
+  renderNode(rootNode);
+  if (rootNode->children == NULL) {
+    rlPopMatrix();
+    return NULL;
+  }
+
+  uint32_t childIdx = 0;
+  for (; childIdx < rootNode->amountChildren; childIdx++) {
+    GravityCenterNode *childNode = rootNode->children[childIdx];
+    if (childNode) {
+      Component *gravityComponent =
+          GetComponent(childNode->entity, GRAVITY_CENTER);
+      if (gravityComponent) {
+
+        rlPushMatrix();
+
+        renderStarSystem(gravityCenterTree->gravityCenters[getIndexOfGC(
+            childNode->entity->id, gravityCenterTree->indexes,
+            gravityCenterTree->amountOfGravityCenters)],
+                         gravityCenterTree);
+        rlPopMatrix();
       } else {
         renderStarSystem(childNode, gravityCenterTree);
       }
@@ -172,7 +217,6 @@ void RenderStarSystemView() {
   Vector3 cameraPos = {0, 15, 30};
   StarSystemView.camera.position = cameraPos;
   UpdateCamera(&StarSystemView.camera);
-  rlLoadIdentity();
   BeginDrawing();
 
   ClearBackground(BLACK);
@@ -183,12 +227,14 @@ void RenderStarSystemView() {
   DrawText("Press <Tab> to go back", 30, 580, 30, RAYWHITE);
   GravityCenterTree *gravityCenterTree = Tleilax.gravityCenterTree;
 
-  BeginMode3D(StarSystemView.camera);
 
+  BeginMode3D(StarSystemView.camera);
   if (gravityCenterTree) {
-    renderStarSystem(gravityCenterTree->gravityCenters[0], gravityCenterTree);
+    renderStarSystemNew(gravityCenterTree->gravityCenters[0], gravityCenterTree);
   }
   EndMode3D();
+
+
   EndDrawing();
 }
 

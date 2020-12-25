@@ -24,6 +24,10 @@ struct GalaxyView {
   float horizontalAngle;
   float horizontalDistance;
   Vector3 cameraInitialPosition;
+
+  Model starModel;
+  Texture2D starTexture;
+  Shader shader;
 };
 
 extern struct GalaxyView GalaxyView;

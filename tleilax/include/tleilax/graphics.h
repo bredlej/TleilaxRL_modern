@@ -22,6 +22,10 @@ struct Graphics {
   void (*Update)(void);
   void (*Render)(void);
   void (*Destroy)(void);
+  RenderTexture2D framebuffer;
+  Shader fbPostProcessingShader;
+  int u_timeLoc;
+  float elapsedTime;
 };
 
 extern struct Graphics Graphics;

@@ -25,6 +25,7 @@ struct TleilaxConfig {
   float scrollSpeed;
 };
 
+
 extern struct TleilaxConfig TleilaxConfig;
 
 struct Tleilax {
