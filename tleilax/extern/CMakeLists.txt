@@ -63,7 +63,7 @@ target_link_libraries(C_StateMachine FaultAllocator FBAllocator)
 
 if (${ENABLE_GRAPHICS})
     # Set this to the minimal version you want to support
-    find_package(raylib 3.0 QUIET) # Let CMake search for a raylib-config.cmake
+    find_package(raylib 3.5.0 QUIET) # Let CMake search for a raylib-config.cmake
 
     # You could change the QUIET above to REQUIRED and remove this if() clause
     # This part downloads raylib and builds it if it's not installed on your system
@@ -73,7 +73,7 @@ if (${ENABLE_GRAPHICS})
         FetchContent_Declare(
                 raylib
                 GIT_REPOSITORY https://github.com/raysan5/raylib.git
-                GIT_TAG 3.0.0
+                GIT_TAG 3.5.0
         )
 
         FetchContent_GetProperties(raylib)
