@@ -5,8 +5,8 @@ int main(int argc, char *argv[]) {
 
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  const int screenWidth = 1600;
-  const int screenHeight = 1200;
+  const int screenWidth = 600;
+  const int screenHeight = 600;
 
   Graphics.Initialize(screenWidth, screenHeight);
 

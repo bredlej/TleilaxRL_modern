@@ -20,8 +20,14 @@ if (${ENABLE_GRAPHICS})
     add_executable(star_shader star_shader.c)
     target_link_libraries(star_shader PRIVATE raylib)
 
+    add_executable(paralax_star_render paralax_star_render.c)
+    target_link_libraries(paralax_star_render PRIVATE raylib raygui random)
+
     add_executable(instanced_rendering instanced_rendering.c)
     target_link_libraries(instanced_rendering PRIVATE raylib glfw)
+
+    add_executable(raylib_instanced shaders_rlgl_mesh_instanced.c)
+    target_link_libraries(raylib_instanced PRIVATE raylib)
 
     add_custom_command(
             TARGET tleilax-app POST_BUILD

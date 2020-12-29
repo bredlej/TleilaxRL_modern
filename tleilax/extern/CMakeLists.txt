@@ -64,7 +64,6 @@ target_link_libraries(C_StateMachine FaultAllocator FBAllocator)
 if (${ENABLE_GRAPHICS})
     # Set this to the minimal version you want to support
     find_package(raylib 3.5.0 QUIET) # Let CMake search for a raylib-config.cmake
-
     # You could change the QUIET above to REQUIRED and remove this if() clause
     # This part downloads raylib and builds it if it's not installed on your system
     if (NOT raylib_FOUND) # If there's none, fetch and build raylib
@@ -90,5 +89,6 @@ if (${ENABLE_GRAPHICS})
 
     endif ()
 
-
+    add_library(raygui INTERFACE)
+    target_include_directories(raygui INTERFACE raygui/src)
 endif ()
